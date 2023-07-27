@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import Alamofire
 
 class SginInViewController: UIViewController {
     var pwHideCount = 0
@@ -110,9 +111,32 @@ class SginInViewController: UIViewController {
     }
     
     @objc func MainVCSwift() {
-        print("sgin in!")
+//        guard let userId = loginIDTextField.text,
+//              let password = loginPWTextField.text else {
+//            return
+//        }
+//
+//        let parameters: [String: Any] = [
+//            "userId": username,
+//            "password": password
+//        ]
+//
+//        // 로그인 API 엔드포인트 URL (서버에 맞게 변경해야 합니다.)
+//        let loginURL = "https://your-server.com/api/login"
+//
+//        AF.request(loginURL, method: .post, parameters: parameters)
+//            .responseJSON { response in
+//                switch response.result {
+//                case .success(let value):
+//                    // 로그인 성공 시 처리
+//                    print("로그인 성공: \(value)")
+//                    self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+//                case .failure(let error):
+//                    // 로그인 실패 또는 에러 처리
+//                    print("로그인 실패: \(error)")
+//                }
+//            }
         self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
-        //여기에 로그인 API
     }
     
     @objc func sginUpVCSwift() {

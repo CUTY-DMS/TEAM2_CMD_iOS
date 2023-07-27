@@ -231,38 +231,52 @@ class SginUpViewController: UIViewController {
     }
     @objc func sginInViewShift() {
         // 여기에 회원가입이 가능한 정보들인지 확인
+        //여기에 이메일, 아이디, 이름, 학번, 생년월일, 전공분야, 전공동아리 안쓰면 안넘어가게 if문
+        //.isEmpty 활용.
         
-        guard let username = sginUpIDTextField.text,
-              let email = sginUpEmailTextField.text,
-              let password = sginUpPWTextField.text else {
-            return
+        if sginUpPWTextField.text == checkPWTextField.text {
+                        guard let username = sginUpIDTextField.text,
+                              let email = sginUpEmailTextField.text,
+                              let password = sginUpPWTextField.text,
+                              let userName = nameTextField.text,
+//            let grader = ,
+//            let schoolClass = ,
+//            let number = ,
+//            let majorType = fieldOfStudyTextField,
+            // 유저면 동아리 이름도 필요
+            else {
+                            return
+                        }
+
+                        let parameters: [String: Any] = [
+                            "userId": username,
+                            "email": email,
+                            "password": password
+                        ]
+
+                        // 회원가입 API 엔드포인트 URL (서버에 맞게 변경해야 합니다.)
+                        let signupURL = "https://your-server.com/api/signup"
+
+                        AF.request(signupURL, method: .post, parameters: parameters)
+                            .responseJSON { response in
+                                switch response.result {
+                                case .success(let value):
+                                    // 회원가입 성공 시 처리
+                                    self.navigationController?.pushViewController(SginInViewController(), animated: true)
+                                    print("회원가입 성공: \(value)")
+                                    // 서버에서 받은 응답에 따라 회원가입 성공 처리를 진행합니다.
+
+                                case .failure(let error):
+                                    // 회원가입 실패 또는 에러 처리
+                                    print("회원가입 실패: \(error)")
+                                    // 회원가입 실패나 네트워크 에러 등을 처리합니다.
+                                }
+                            }
+            self.navigationController?.pushViewController(SginInViewController(), animated: true)
+            print("success")
+        }else {
+            print("Fail")
         }
-
-        let parameters: [String: Any] = [
-            "username": username,
-            "email": email,
-            "password": password
-        ]
-
-        // 회원가입 API 엔드포인트 URL (서버에 맞게 변경해야 합니다.)
-        let signupURL = "https://your-server.com/api/signup"
-
-        AF.request(signupURL, method: .post, parameters: parameters)
-            .responseJSON { response in
-                switch response.result {
-                case .success(let value):
-                    // 회원가입 성공 시 처리
-                    self.navigationController?.pushViewController(SginInViewController(), animated: true)
-                    print("회원가입 성공: \(value)")
-                    // 서버에서 받은 응답에 따라 회원가입 성공 처리를 진행합니다.
-
-                case .failure(let error):
-                    // 회원가입 실패 또는 에러 처리
-                    print("회원가입 실패: \(error)")
-                    // 회원가입 실패나 네트워크 에러 등을 처리합니다.
-                }
-            }
-        self.navigationController?.pushViewController(SginInViewController(), animated: true)
     }
     func addSubView() {
         [

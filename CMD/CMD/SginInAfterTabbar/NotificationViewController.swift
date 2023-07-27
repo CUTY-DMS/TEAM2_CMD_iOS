@@ -18,6 +18,7 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         $0.font = UIFont.systemFont(ofSize: 50, weight: .bold)
         $0.textColor = .white
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "Main1")

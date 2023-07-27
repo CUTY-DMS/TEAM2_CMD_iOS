@@ -46,6 +46,18 @@ class MyPageViewController: UIViewController {
         $0.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
         $0.setTitleColor(.black, for: .normal)
     }
+    private let logoutButton = UIButton().then {
+        $0.setTitle("로그아웃", for: .normal)
+        $0.backgroundColor = .systemRed
+        $0.setTitleColor(.black, for: .normal)
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.red.cgColor
+        $0.layer.cornerRadius = 5
+        $0.layer.shadowColor = UIColor.gray.cgColor
+        $0.layer.shadowOpacity = 1.0
+        $0.layer.shadowOffset = CGSize.zero
+        $0.layer.shadowRadius = 1
+    }
     private let nameLabel = UILabel().then {
         $0.text = "이름"
     }
@@ -92,6 +104,7 @@ class MyPageViewController: UIViewController {
         addSubView()
         setLayout()
         self.editProfileButton.addTarget(self, action: #selector(self.editProfile), for: .touchUpInside)
+        self.logoutButton.addTarget(self, action: #selector(self.logout), for: .touchUpInside)
         print(EditInfoVC.editName)
         print(EditInfoVC.editClassNum)
         print(EditInfoVC.editBirthday)
@@ -108,6 +121,9 @@ class MyPageViewController: UIViewController {
     @objc func editProfile() {
         self.navigationController?.pushViewController(EditInfoViewController(), animated: true)
     }
+    @objc func logout() {
+        self.navigationController?.pushViewController(SginInViewController(), animated: true)
+    }
     
     func addSubView() {
         [
@@ -115,6 +131,7 @@ class MyPageViewController: UIViewController {
             profileTitleNameLabel,
             profileInfoLabel,
             editProfileButton,
+            logoutButton,
             nameLabel,
             profileNameLabel,
             classNumLabel,
@@ -148,6 +165,11 @@ class MyPageViewController: UIViewController {
         editProfileButton.snp.makeConstraints {
             $0.top.equalTo(profileTitleNameLabel).inset(67)
             $0.left.equalTo(profileInfoLabel).inset(86)
+        }
+        logoutButton.snp.makeConstraints {
+            $0.top.equalTo(profileTitleNameLabel).inset(60)
+            $0.left.equalTo(editProfileButton).inset(184)
+            $0.right.equalToSuperview().inset(35)
         }
         nameLabel.snp.makeConstraints {
             $0.top.equalTo(profileInfoLabel).inset(55)
