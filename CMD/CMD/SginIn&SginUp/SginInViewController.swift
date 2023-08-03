@@ -41,14 +41,23 @@ class SginInViewController: UIViewController {
     let IDUnderlineView = UIView().then {
         $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
     }
-    let PWUnderlineView = UIView().then {
-        $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
-    }
     private let loginPWTextField = UITextField().then {
         $0.textColor = .black
         $0.placeholder = "비밀번호"
         $0.isSecureTextEntry = true
         $0.autocapitalizationType = .none
+    }
+    let PWUnderlineView = UIView().then {
+        $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
+    }
+    
+    private let loginUsernameTextField = UITextField().then {
+        $0.textColor = .black
+        $0.placeholder = "유저이름"
+        $0.autocapitalizationType = .none
+    }
+    let usernameUnderlineView = UIView().then {
+        $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
     }
     
     //eye
@@ -110,33 +119,76 @@ class SginInViewController: UIViewController {
         self.findPWClickedBtn.addTarget(self, action: #selector(self.findPWSwift), for: .touchUpInside)
     }
     
+    //**
+    func saveTokens(accessToken: String, refreshToken: String, accessExpiredAt: String, refreshExpiredAt: String) {
+        let defaults = UserDefaults.standard
+        defaults.set(accessToken, forKey: "accessToken")
+        defaults.set(refreshToken, forKey: "refreshToken")
+        defaults.set(accessExpiredAt, forKey: "accessExpiredAt")
+        defaults.set(refreshExpiredAt, forKey: "refreshExpiredAt")
+    }
+    
+    func getAccessToken() -> String? {
+        return UserDefaults.standard.string(forKey: "accessToken")
+    }
+    //**
+    
     @objc func MainVCSwift() {
-//        guard let userId = loginIDTextField.text,
-//              let password = loginPWTextField.text else {
+//        let baseUrl = "http://3.25.221.219:8080"
+//
+//        let loginURL = "\(baseUrl)/login/student" // 로그인 요청을 처리할 API 주소
+//
+//        guard let userID = loginIDTextField.text,
+//              let password = loginPWTextField.text
+//                //        let username = loginUsernameTextField.text
+//        else {
 //            return
 //        }
 //
+//        // 사용자가 입력한 아이디와 비밀번호
 //        let parameters: [String: Any] = [
-//            "userId": username,
+//            "userId": userID,
 //            "password": password
+//            //            "username" : username
 //        ]
 //
-//        // 로그인 API 엔드포인트 URL (서버에 맞게 변경해야 합니다.)
-//        let loginURL = "https://your-server.com/api/login"
-//
 //        AF.request(loginURL, method: .post, parameters: parameters)
-//            .responseJSON { response in
+//            .validate()
+//            .responseDecodable(of: LoginResponse.self) { response in
 //                switch response.result {
-//                case .success(let value):
+//                case .success(let loginResponse):
 //                    // 로그인 성공 시 처리
-//                    print("로그인 성공: \(value)")
-//                    self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+//                    print("로그인 성공! 응답 데이터: \(loginResponse)")
+//                    handleLoginSuccess(accessToken: loginResponse.accessToken, refreshToken: loginResponse.refreshToken)
 //                case .failure(let error):
-//                    // 로그인 실패 또는 에러 처리
-//                    print("로그인 실패: \(error)")
+//                    // 로그인 실패 시 처리
+//                    print("로그인 실패! 오류: \(error)")
+//
+//                    // 로그인 실패 시에도 어떤 처리를 하고 싶다면 이 곳에 추가 코드를 작성
+//                    // 예: 알림 창을 띄워서 사용자에게 로그인 실패를 알리는 등
 //                }
 //            }
-        self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+        
+//        AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+//            .validate()
+//            .responseJSON { response in
+//                debugPrint(response)
+//                switch response.result {
+//                case .success(let value):
+//                    if let result = value as? [String: Any], let status = result["status"] as? String {
+//                        if status == "success" {
+//                            // 로그인 성공 처리
+//                            print("로그인 성공!")
+//                            self.navigationController?.pushViewController((MainHomeViewController()), animated: true)
+//                        } else {
+//                            // 로그인 실패 처리
+//                            print("로그인 실패: \(result["message"] ?? "")")
+//                        }
+//                    }
+//                case .failure(let error):
+//                    print("요청 실패: \(error)")
+//                }
+//            }
     }
     
     @objc func sginUpVCSwift() {
@@ -163,8 +215,10 @@ class SginInViewController: UIViewController {
             loginIDTextField,
             loginPWTextField,
             loginPWHideClickedBtn,
+            loginUsernameTextField,
             IDUnderlineView,
             PWUnderlineView,
+            usernameUnderlineView,
             loginClickedBtn,
             goSignUpLabel,
             goSignUpClickedBtn,
@@ -193,6 +247,11 @@ class SginInViewController: UIViewController {
         loginPWHideClickedBtn.snp.makeConstraints {
             $0.top.equalTo(loginPWTextField)
             $0.left.equalTo(loginPWTextField).inset(320)
+        }
+        loginUsernameTextField.snp.makeConstraints {
+            $0.top.equalTo(loginPWTextField).inset(80)
+            $0.left.equalToSuperview().inset(40)
+            $0.right.equalToSuperview().inset(30)
         }
         loginClickedBtn.snp.makeConstraints {
             $0.top.equalTo(PWUnderlineView).inset(200)
@@ -232,6 +291,12 @@ class SginInViewController: UIViewController {
             $0.left.equalToSuperview().inset(35)
             $0.right.equalToSuperview().inset(31)
             $0.bottom.equalTo(loginPWTextField).inset(-5)
+        }
+        usernameUnderlineView.snp.makeConstraints {
+            $0.top.equalTo(loginUsernameTextField).inset(25)
+            $0.left.equalToSuperview().inset(35)
+            $0.right.equalToSuperview().inset(31)
+            $0.bottom.equalTo(loginUsernameTextField).inset(-4)
         }
     }
 }
