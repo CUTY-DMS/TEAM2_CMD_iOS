@@ -8,6 +8,7 @@ target 'CMD' do
   # Pods for CMD
   pod 'SnapKit'
   pod 'Then'
-  pod 'DropDown'
   pod 'Alamofire'
+  pod 'SwiftyJSON'
+  pod 'DropDown'
 end

@@ -279,7 +279,7 @@ class SginUpViewController: UIViewController {
         }
 
         // 중복 아이디 확인 API 호출
-        let baseUrl = "http://3.25.221.219:8080"
+        let baseUrl = "http://52.65.160.119:8080"
         let duplicateIDEndpoint = "\(baseUrl)/userId"
 
         // 아이디 중복 확인

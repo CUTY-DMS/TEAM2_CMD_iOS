@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import Then
 import Alamofire
+import SwiftyJSON
 
 class SginInViewController: UIViewController {
     var pwHideCount = 0
@@ -134,61 +135,98 @@ class SginInViewController: UIViewController {
     //**
     
     @objc func MainVCSwift() {
-//        let baseUrl = "http://3.25.221.219:8080"
-//
-//        let loginURL = "\(baseUrl)/login/student" // 로그인 요청을 처리할 API 주소
-//
-//        guard let userID = loginIDTextField.text,
-//              let password = loginPWTextField.text
-//                //        let username = loginUsernameTextField.text
-//        else {
-//            return
-//        }
-//
-//        // 사용자가 입력한 아이디와 비밀번호
-//        let parameters: [String: Any] = [
-//            "userId": userID,
-//            "password": password
-//            //            "username" : username
-//        ]
-//
-//        AF.request(loginURL, method: .post, parameters: parameters)
-//            .validate()
-//            .responseDecodable(of: LoginResponse.self) { response in
-//                switch response.result {
-//                case .success(let loginResponse):
-//                    // 로그인 성공 시 처리
-//                    print("로그인 성공! 응답 데이터: \(loginResponse)")
-//                    handleLoginSuccess(accessToken: loginResponse.accessToken, refreshToken: loginResponse.refreshToken)
-//                case .failure(let error):
-//                    // 로그인 실패 시 처리
-//                    print("로그인 실패! 오류: \(error)")
-//
-//                    // 로그인 실패 시에도 어떤 처리를 하고 싶다면 이 곳에 추가 코드를 작성
-//                    // 예: 알림 창을 띄워서 사용자에게 로그인 실패를 알리는 등
-//                }
-//            }
         
-//        AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-//            .validate()
-//            .responseJSON { response in
-//                debugPrint(response)
-//                switch response.result {
-//                case .success(let value):
-//                    if let result = value as? [String: Any], let status = result["status"] as? String {
-//                        if status == "success" {
-//                            // 로그인 성공 처리
-//                            print("로그인 성공!")
-//                            self.navigationController?.pushViewController((MainHomeViewController()), animated: true)
-//                        } else {
-//                            // 로그인 실패 처리
-//                            print("로그인 실패: \(result["message"] ?? "")")
-//                        }
-//                    }
-//                case .failure(let error):
-//                    print("요청 실패: \(error)")
-//                }
-//            }
+        guard let userId = loginIDTextField.text, let password = loginPWTextField.text else {
+                    return
+                }
+                login(userId: userId, password: password)
+        //
+        //        let loginURL = "\(baseUrl)/login/student" // 로그인 요청을 처리할 API 주소
+        //
+        //        guard let userID = loginIDTextField.text,
+        //              let password = loginPWTextField.text
+        //                //        let username = loginUsernameTextField.text
+        //        else {
+        //            return
+        //        }
+        //
+        //        // 사용자가 입력한 아이디와 비밀번호
+        //        let parameters: [String: Any] = [
+        //            "userId": userID,
+        //            "password": password
+        //            //            "username" : username
+        //        ]
+        //
+        //        AF.request(loginURL, method: .post, parameters: parameters)
+        //            .validate()
+        //            .responseDecodable(of: LoginResponse.self) { response in
+        //                switch response.result {
+        //                case .success(let loginResponse):
+        //                    // 로그인 성공 시 처리
+        //                    print("로그인 성공! 응답 데이터: \(loginResponse)")
+        //                    handleLoginSuccess(accessToken: loginResponse.accessToken, refreshToken: loginResponse.refreshToken)
+        //                case .failure(let error):
+        //                    // 로그인 실패 시 처리
+        //                    print("로그인 실패! 오류: \(error)")
+        //
+        //                    // 로그인 실패 시에도 어떤 처리를 하고 싶다면 이 곳에 추가 코드를 작성
+        //                    // 예: 알림 창을 띄워서 사용자에게 로그인 실패를 알리는 등
+        //                }
+        //            }
+        
+        //        AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+        //            .validate()
+        //            .responseJSON { response in
+        //                debugPrint(response)
+        //                switch response.result {
+        //                case .success(let value):
+        //                    if let result = value as? [String: Any], let status = result["status"] as? String {
+        //                        if status == "success" {
+        //                            // 로그인 성공 처리
+        //                            print("로그인 성공!")
+        //                            self.navigationController?.pushViewController((MainHomeViewController()), animated: true)
+        //                        } else {
+        //                            // 로그인 실패 처리
+        //                            print("로그인 실패: \(result["message"] ?? "")")
+        //                        }
+        //                    }
+        //                case .failure(let error):
+        //                    print("요청 실패: \(error)")
+        //                }
+        //            }
+    }
+    
+    // MARK: - Login Function
+    
+    private func login(userId: String, password: String) {
+        let baseURL = "http://52.65.160.119:8080/login/student"
+        let loginURL = URL(string: baseURL)!
+        let parameters: [String: Any] = ["userId": userId, "password": password]
+        
+        AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .responseJSON { [weak self] response in
+                guard let self = self else { return }
+                
+                switch response.result {
+                case .success(let value):
+                    let json = JSON(value)
+                    if let accessToken = json["accessToken"].string, let refreshToken = json["refreshToken"].string {
+                        // 로그인 성공 - Access Token과 Refresh Token 사용
+                        print("Access Token: \(accessToken)")
+                        print("Refresh Token: \(refreshToken)")
+                        self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+                        
+                        // 여기서 토큰을 사용하여 다른 API 요청을 할 수 있습니다.
+                    } else {
+                        // 로그인 실패 - 처리할 내용 작성
+                        print("로그인 실패")
+                    }
+                    
+                case .failure(let error):
+                    // 네트워크 오류 - 처리할 내용 작성
+                    print("네트워크 오류: \(error.localizedDescription)")
+                }
+            }
     }
     
     @objc func sginUpVCSwift() {
