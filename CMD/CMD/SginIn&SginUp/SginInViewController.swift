@@ -113,6 +113,7 @@ class SginInViewController: UIViewController {
         addSubView()
         setLayout()
         setLayoutUnderLine()
+        checkAutoLogin()
         self.navigationController?.navigationBar.isHidden = true;
         self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
         self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
@@ -135,72 +136,15 @@ class SginInViewController: UIViewController {
     //**
     
     @objc func MainVCSwift() {
-        
         guard let userId = loginIDTextField.text, let password = loginPWTextField.text else {
-                    return
-                }
-                login(userId: userId, password: password)
-        //
-        //        let loginURL = "\(baseUrl)/login/student" // 로그인 요청을 처리할 API 주소
-        //
-        //        guard let userID = loginIDTextField.text,
-        //              let password = loginPWTextField.text
-        //                //        let username = loginUsernameTextField.text
-        //        else {
-        //            return
-        //        }
-        //
-        //        // 사용자가 입력한 아이디와 비밀번호
-        //        let parameters: [String: Any] = [
-        //            "userId": userID,
-        //            "password": password
-        //            //            "username" : username
-        //        ]
-        //
-        //        AF.request(loginURL, method: .post, parameters: parameters)
-        //            .validate()
-        //            .responseDecodable(of: LoginResponse.self) { response in
-        //                switch response.result {
-        //                case .success(let loginResponse):
-        //                    // 로그인 성공 시 처리
-        //                    print("로그인 성공! 응답 데이터: \(loginResponse)")
-        //                    handleLoginSuccess(accessToken: loginResponse.accessToken, refreshToken: loginResponse.refreshToken)
-        //                case .failure(let error):
-        //                    // 로그인 실패 시 처리
-        //                    print("로그인 실패! 오류: \(error)")
-        //
-        //                    // 로그인 실패 시에도 어떤 처리를 하고 싶다면 이 곳에 추가 코드를 작성
-        //                    // 예: 알림 창을 띄워서 사용자에게 로그인 실패를 알리는 등
-        //                }
-        //            }
-        
-        //        AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-        //            .validate()
-        //            .responseJSON { response in
-        //                debugPrint(response)
-        //                switch response.result {
-        //                case .success(let value):
-        //                    if let result = value as? [String: Any], let status = result["status"] as? String {
-        //                        if status == "success" {
-        //                            // 로그인 성공 처리
-        //                            print("로그인 성공!")
-        //                            self.navigationController?.pushViewController((MainHomeViewController()), animated: true)
-        //                        } else {
-        //                            // 로그인 실패 처리
-        //                            print("로그인 실패: \(result["message"] ?? "")")
-        //                        }
-        //                    }
-        //                case .failure(let error):
-        //                    print("요청 실패: \(error)")
-        //                }
-        //            }
+            return
+        }
+        login(userId: userId, password: password)
     }
     
-    // MARK: - Login Function
-    
     private func login(userId: String, password: String) {
-        let baseURL = "http://52.65.160.119:8080/login/student"
-        let loginURL = URL(string: baseURL)!
+        let baseURL = "http://52.65.160.119:8080"
+        let loginURL = URL(string: "\(baseURL)/login/student")!
         let parameters: [String: Any] = ["userId": userId, "password": password]
         
         AF.request(loginURL, method: .post, parameters: parameters, encoding: JSONEncoding.default)
@@ -214,6 +158,14 @@ class SginInViewController: UIViewController {
                         // 로그인 성공 - Access Token과 Refresh Token 사용
                         print("Access Token: \(accessToken)")
                         print("Refresh Token: \(refreshToken)")
+                        
+                        let user = User(username: loginIDTextField.text!, password: loginPWTextField.text!)
+                        
+                        // UserDefaults를 사용하여 사용자 정보를 저장합니다.
+                        UserDefaults.standard.set(user.username, forKey: "username")
+                        UserDefaults.standard.set(user.password, forKey: "password")
+                        UserDefaults.standard.synchronize()
+                        
                         self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
                         
                         // 여기서 토큰을 사용하여 다른 API 요청을 할 수 있습니다.
@@ -228,6 +180,54 @@ class SginInViewController: UIViewController {
                 }
             }
     }
+    
+    func checkAutoLogin() {
+        let baseURL = "http://52.65.160.119:8080"
+        let loginURL = URL(string: "\(baseURL)/login/student")!
+            // UserDefaults에서 사용자 정보를 가져옵니다.
+            guard let username = UserDefaults.standard.string(forKey: "username"),
+                  let password = UserDefaults.standard.string(forKey: "password") else {
+                // 저장된 사용자 정보가 없는 경우, 로그인 화면을 표시합니다.
+                presentLoginScreen()
+                return
+            }
+
+            // 저장된 사용자 정보로 로그인 요청을 보냅니다. (Alamofire 사용)
+            let parameters: [String: String] = [
+                "username": username,
+                "password": password
+            ]
+
+            AF.request(loginURL, method: .post, parameters: parameters).responseJSON { response in
+                switch response.result {
+                case .success:
+                    // 로그인 성공 시, 다음 화면으로 이동합니다.
+                    self.presentMainScreen()
+                case .failure:
+                    // 로그인 실패 시, 로그인 화면을 표시합니다.
+                    self.presentLoginScreen()
+                }
+            }
+        }
+    func presentLoginScreen() {
+        // 로그인 화면으로 이동하는 코드를 작성합니다.
+        // 예를 들어, storyboard를 사용한다면:
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        if let SginInViewController = storyboard.instantiateViewController(withIdentifier: "SginInViewController") as? SginInViewController {
+//            navigationController?.pushViewController(SginInViewController(), animated: true)
+//        }
+    }
+    
+    func presentMainScreen() {
+        // 메인 화면으로 이동하는 코드를 작성합니다.
+        // 예를 들어, storyboard를 사용한다면:
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        if let MainHomeViewController = storyboard.instantiateViewController(withIdentifier: "MainHomeViewController") as? MainHomeViewController {
+            navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+//        }
+    }
+    
+    
     
     @objc func sginUpVCSwift() {
         print("shift sginUpView!")
