@@ -122,6 +122,10 @@ class MyPageViewController: UIViewController {
         self.navigationController?.pushViewController(EditInfoViewController(), animated: true)
     }
     @objc func logout() {
+        UserDefaults.standard.removeObject(forKey: "username")
+        UserDefaults.standard.removeObject(forKey: "password")
+        UserDefaults.standard.synchronize()
+        
         self.navigationController?.pushViewController(SginInViewController(), animated: true)
     }
     
