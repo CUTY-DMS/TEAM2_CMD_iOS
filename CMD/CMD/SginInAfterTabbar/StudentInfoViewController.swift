@@ -8,9 +8,21 @@
 import UIKit
 import SnapKit
 import Then
+import Alamofire
+
+struct studentTitle: Codable {
+    var id : Int
+    var username : String
+    var grader : Int
+    var schoolClass : Int
+    var number : Int
+}
 
 class StudentInfoViewController:
     UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    var studentTitles: [studentTitle] = []
+    
     var collectionView: UICollectionView!
     
     let titleLabel = UILabel().then {
@@ -66,14 +78,43 @@ class StudentInfoViewController:
         self.collectionView!.register(InfoCollectionViewCustomCell.self, forCellWithReuseIdentifier: InfoCollectionViewCustomCell.identifier)
     }
     
+    //API
+    func fetchAdminNotices() {
+            let baseURL = "http://52.65.160.119:8080"
+            let adminNoticesURL = "\(baseURL)/getStudentList" // 서버 API 엔드포인트 URL for admin notices
+
+            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
+                switch response.result {
+                case .success(let data):
+                    // 서버에서 받아온 JSON 데이터 파싱
+                    do {
+                        let decoder = JSONDecoder()
+                        self.studentTitles = try decoder.decode([studentTitle].self, from: data)
+                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
+                        self.collectionView.reloadData()
+                    } catch {
+                        print("Error parsing JSON: \(error)")
+                    }
+                case .failure(let error):
+                    print("Error fetching admin notices: \(error)")
+                }
+            }
+        }
+    
+    
     // 컬렉션 뷰 데이터 소스 메서드
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20 // 셀 개수
+        return studentTitles.count // 셀 개수
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InfoCollectionViewCustomCell", for: indexPath) as! InfoCollectionViewCustomCell
         cell.imageView.image = UIImage(named: "MainLogo")
+        
+        let studentTitle = studentTitles[indexPath.item]
+        
+        cell.nameLabel.text = studentTitle.username
+        
         
         return cell
     }

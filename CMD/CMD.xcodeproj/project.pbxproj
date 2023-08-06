@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4F2324412A7E95B500BC7556 /* AutoLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2324402A7E95B500BC7556 /* AutoLoginModel.swift */; };
-		4F7658B62A6FFA37006BE1FE /* SubjectTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7658B52A6FFA37006BE1FE /* SubjectTableModel.swift */; };
+		4F2324432A7EB2C200BC7556 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2324422A7EB2C200BC7556 /* NotificationModel.swift */; };
+		4F2324452A7F752800BC7556 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2324442A7F752800BC7556 /* UserInfoModel.swift */; };
+		4F2324472A7FC22100BC7556 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F2324462A7FC22100BC7556 /* UserService.swift */; };
 		4F98DE4C2A5AEB4C00F8B123 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F98DE4B2A5AEB4C00F8B123 /* AppDelegate.swift */; };
 		4F98DE4E2A5AEB4C00F8B123 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F98DE4D2A5AEB4C00F8B123 /* SceneDelegate.swift */; };
 		4F98DE502A5AEB4C00F8B123 /* SginInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F98DE4F2A5AEB4C00F8B123 /* SginInViewController.swift */; };
@@ -37,7 +39,9 @@
 
 /* Begin PBXFileReference section */
 		4F2324402A7E95B500BC7556 /* AutoLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLoginModel.swift; sourceTree = "<group>"; };
-		4F7658B52A6FFA37006BE1FE /* SubjectTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectTableModel.swift; sourceTree = "<group>"; };
+		4F2324422A7EB2C200BC7556 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
+		4F2324442A7F752800BC7556 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
+		4F2324462A7FC22100BC7556 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		4F98DE482A5AEB4C00F8B123 /* CMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F98DE4B2A5AEB4C00F8B123 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4F98DE4D2A5AEB4C00F8B123 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -128,8 +132,9 @@
 		4FA423BD2A64553800338465 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4F7658B52A6FFA37006BE1FE /* SubjectTableModel.swift */,
 				4F2324402A7E95B500BC7556 /* AutoLoginModel.swift */,
+				4F2324422A7EB2C200BC7556 /* NotificationModel.swift */,
+				4F2324442A7F752800BC7556 /* UserInfoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 				4FA4CB3B2A6E83A700DF5AF8 /* NotificationModalViewController.swift */,
 				4FA423AF2A63DE4200338465 /* MyPageViewController.swift */,
 				4FA423BE2A650BBA00338465 /* EditInfoViewController.swift */,
+				4F2324462A7FC22100BC7556 /* UserService.swift */,
 			);
 			path = SginInAfterTabbar;
 			sourceTree = "<group>";
@@ -298,7 +304,9 @@
 				4FBDB87D2A5D9E7B0037E143 /* NotificationViewController.swift in Sources */,
 				4FBDB8792A5D9D600037E143 /* SginInAfterTabBarController.swift in Sources */,
 				4F98DE652A5C5EEB00F8B123 /* SginUpViewController.swift in Sources */,
+				4F2324452A7F752800BC7556 /* UserInfoModel.swift in Sources */,
 				4FA423AE2A63DD1400338465 /* BeforeSginInTabBarController.swift in Sources */,
+				4F2324472A7FC22100BC7556 /* UserService.swift in Sources */,
 				4FA423BF2A650BBA00338465 /* EditInfoViewController.swift in Sources */,
 				4FA423B42A640AF100338465 /* BeforeSubjectTableViewControllerCell.swift in Sources */,
 				4FBDB8762A5D63740037E143 /* SubjectTableViewControllerCell.swift in Sources */,
@@ -311,9 +319,9 @@
 				4FBDB8742A5D47610037E143 /* MainHomeViewController.swift in Sources */,
 				4FA4CB3C2A6E83A700DF5AF8 /* NotificationModalViewController.swift in Sources */,
 				4FA423B22A640AB600338465 /* BeforeMainHomeViewController.swift in Sources */,
-				4F7658B62A6FFA37006BE1FE /* SubjectTableModel.swift in Sources */,
 				4FBDB87B2A5D9E310037E143 /* StudentInfoViewController.swift in Sources */,
 				4FA4CB3E2A6E96D100DF5AF8 /* SginInFindPWViewController.swift in Sources */,
+				4F2324432A7EB2C200BC7556 /* NotificationModel.swift in Sources */,
 				4F2324412A7E95B500BC7556 /* AutoLoginModel.swift in Sources */,
 				4F98DE4E2A5AEB4C00F8B123 /* SceneDelegate.swift in Sources */,
 				4FA4CB3A2A6E7B4100DF5AF8 /* StudentInfoModalViewController.swift in Sources */,

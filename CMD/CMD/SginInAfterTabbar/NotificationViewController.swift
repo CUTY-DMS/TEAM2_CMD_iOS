@@ -8,9 +8,17 @@
 import UIKit
 import SnapKit
 import Then
+import Alamofire
+
+struct notice: Codable {
+    let title: String
+    let expiredAt: String?
+}
 
 class NotificationViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
+    var notices: [notice] = []
+    
     var collectionView: UICollectionView!
     
     let titleLabel = UILabel().then {
@@ -26,6 +34,8 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         // Do any additional setup after loading the view.
         
         // 컨테이너 뷰 생성
+        fetchAdminNotices()
+        
         let containerView = UIView()
         containerView.backgroundColor = UIColor(named: "Main1")
         
@@ -65,12 +75,43 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         self.collectionView!.register(NotificationCollectionViewCustomCell.self, forCellWithReuseIdentifier: NotificationCollectionViewCustomCell.identifier)
     }
     
+    
+    
+    //API
+    func fetchAdminNotices() {
+            let baseURL = "http://52.65.160.119:8080"
+            let adminNoticesURL = "\(baseURL)/notification/list" // 서버 API 엔드포인트 URL for admin notices
+
+            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
+                switch response.result {
+                case .success(let data):
+                    // 서버에서 받아온 JSON 데이터 파싱
+                    do {
+                        let decoder = JSONDecoder()
+                        self.notices = try decoder.decode([notice].self, from: data)
+                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
+                        self.collectionView.reloadData()
+                    } catch {
+                        print("Error parsing JSON: \(error)")
+                    }
+                case .failure(let error):
+                    print("Error fetching admin notices: \(error)")
+                }
+            }
+        }
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return notices.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NotificationCollectionViewCustomCell", for: indexPath) as! NotificationCollectionViewCustomCell
+        
+        let notice = notices[indexPath.item]
+        
+        cell.notiFicationTitleLabel.text = notice.title
+        cell.notiFicationDateLabel.text = notice.expiredAt
         
         return cell
     }

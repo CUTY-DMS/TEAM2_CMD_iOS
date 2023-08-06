@@ -8,27 +8,14 @@
 import UIKit
 import SnapKit
 import Then
+import Alamofire
 
 class MyPageViewController: UIViewController {
     
-//    var editProfileModel: profileModel!
-
-//        var editName1: String = "이태규"
-//        var editClassNum1: String = ""
-//        var editBirthday1: String = ""
-//        var editFieldOfStudy1: String = ""
-//        var editMajorClub1: String = ""
-
+    var userInfo: UserInfoModel?
+    
     let EditInfoVC = EditInfoViewController()
 
-    //    let profileTitleImageView: UIImageView = {
-    //        let aImageView = UIImageView()
-    //        aImageView.backgroundColor = .white
-    //        //표시될 UIImage 객체 부여
-    //        aImageView.image = UIImage(named: "MainLogo")
-    //        aImageView.translatesAutoresizingMaskIntoConstraints = false
-    //        return aImageView
-    //    }()
     private let profileTitleImageView = UIImageView().then {
         $0.backgroundColor = .white
         $0.image = UIImage(named: "MainLogo")
@@ -97,30 +84,66 @@ class MyPageViewController: UIViewController {
         $0.text = "자리 배치"
         $0.font = UIFont.systemFont(ofSize: 22, weight: .bold)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         addSubView()
         setLayout()
+//        setMyProfile()
         self.editProfileButton.addTarget(self, action: #selector(self.editProfile), for: .touchUpInside)
         self.logoutButton.addTarget(self, action: #selector(self.logout), for: .touchUpInside)
-        print(EditInfoVC.editName)
-        print(EditInfoVC.editClassNum)
-        print(EditInfoVC.editBirthday)
-        print(EditInfoVC.editFieldOfStudy)
-        print(EditInfoVC.editMajorClub)
-//        profileTitleNameLabel.text = editName1
-//        profileNameLabel.text = editName1
-        profileClassNumLabel.text = EditInfoVC.editClassNum
-        profileBirthdayLabel.text = EditInfoVC.editBirthday
-        profileFieldOfStudyLabel.text = EditInfoVC.editFieldOfStudy
-        profileMajorClubLabel.text = EditInfoVC.editMajorClub
+        
+        fetchUserInfoFromServer { [weak self] result in
+            switch result {
+            case .success(let userInfo):
+                // 사용자 정보를 라벨에 표시합니다.
+                self?.updateLabels(with: userInfo)
+            case .failure(let error):
+                print("Error fetching user info: \(error)")
+            }
+        }
+    }
+    
+    
+    private func updateLabels(with userInfo: UserInfoModel) {
+        profileNameLabel.text = userInfo.username
+        var classNum: String = String(userInfo.grader) + String(userInfo.schoolClass) + String(userInfo.number)
+        profileClassNumLabel.text = classNum
+        profileBirthdayLabel.text = String(userInfo.birth)
+        profileFieldOfStudyLabel.text = userInfo.majorType
+        profileMajorClubLabel.text = userInfo.club
+    }
+//    func setMyProfile() {
+//        if let userInfo = userInfo {
+//            var classNum: String = String(userInfo.grader) + String(userInfo.schoolClass) + String(userInfo.number)
+//            profileNameLabel.text = userInfo.username
+//            profileClassNumLabel.text = classNum
+//            profileBirthdayLabel.text = userInfo.birthday
+//            profileFieldOfStudyLabel.text = userInfo.majorType
+//            profileMajorClubLabel.text = userInfo.club
+//        }
+//    }
+    
+    func fetchUserInfoFromServer(completion: @escaping (Result<UserInfoModel, Error>) -> Void) {
+        let baseURL = "http://52.65.160.119:8080"
+        let userInfoURL = URL(string: "\(baseURL)/student")!
+
+        AF.request(userInfoURL, method: .get).responseDecodable(of: UserInfoModel.self) { response in
+            switch response.result {
+            case .success(let userInfo):
+                completion(.success(userInfo))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     @objc func editProfile() {
         self.navigationController?.pushViewController(EditInfoViewController(), animated: true)
     }
+    
     @objc func logout() {
         UserDefaults.standard.removeObject(forKey: "username")
         UserDefaults.standard.removeObject(forKey: "password")

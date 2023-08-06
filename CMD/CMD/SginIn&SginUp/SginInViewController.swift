@@ -11,8 +11,10 @@ import Then
 import Alamofire
 import SwiftyJSON
 
-class SginInViewController: UIViewController {
+class SginInViewController: UIViewController{
+    
     var pwHideCount = 0
+    var userName: String = ""
     
     @objc func loginBtn(_ sender: UIButton) {
         self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
@@ -151,6 +153,8 @@ class SginInViewController: UIViewController {
             .responseJSON { [weak self] response in
                 guard let self = self else { return }
                 
+                print(userId)
+                userName = userId
                 switch response.result {
                 case .success(let value):
                     let json = JSON(value)
@@ -184,47 +188,65 @@ class SginInViewController: UIViewController {
     func checkAutoLogin() {
         let baseURL = "http://52.65.160.119:8080"
         let loginURL = URL(string: "\(baseURL)/login/student")!
-            // UserDefaults에서 사용자 정보를 가져옵니다.
-            guard let username = UserDefaults.standard.string(forKey: "username"),
-                  let password = UserDefaults.standard.string(forKey: "password") else {
-                // 저장된 사용자 정보가 없는 경우, 로그인 화면을 표시합니다.
-                presentLoginScreen()
-                return
-            }
-
-            // 저장된 사용자 정보로 로그인 요청을 보냅니다. (Alamofire 사용)
-            let parameters: [String: String] = [
-                "username": username,
-                "password": password
-            ]
-
-            AF.request(loginURL, method: .post, parameters: parameters).responseJSON { response in
-                switch response.result {
-                case .success:
-                    // 로그인 성공 시, 다음 화면으로 이동합니다.
-                    self.presentMainScreen()
-                case .failure:
-                    // 로그인 실패 시, 로그인 화면을 표시합니다.
-                    self.presentLoginScreen()
-                }
+        // UserDefaults에서 사용자 정보를 가져옵니다.
+        guard let username = UserDefaults.standard.string(forKey: "username"),
+              let password = UserDefaults.standard.string(forKey: "password") else {
+            // 저장된 사용자 정보가 없는 경우, 로그인 화면을 표시합니다.
+            presentLoginScreen()
+            return
+        }
+        
+        // 저장된 사용자 정보로 로그인 요청을 보냅니다. (Alamofire 사용)
+        let parameters: [String: String] = [
+            "username": username,
+            "password": password
+        ]
+        
+        AF.request(loginURL, method: .post, parameters: parameters).responseJSON { response in
+            switch response.result {
+            case .success:
+                // 로그인 성공 시, 다음 화면으로 이동합니다.
+                self.presentMainScreen()
+            case .failure:
+                // 로그인 실패 시, 로그인 화면을 표시합니다.
+                self.presentLoginScreen()
             }
         }
-    func presentLoginScreen() {
-        // 로그인 화면으로 이동하는 코드를 작성합니다.
-        // 예를 들어, storyboard를 사용한다면:
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        if let SginInViewController = storyboard.instantiateViewController(withIdentifier: "SginInViewController") as? SginInViewController {
-//            navigationController?.pushViewController(SginInViewController(), animated: true)
+
+        
+//        func fetchUserInfoFromServer() {
+//            let baseURL = "http://52.65.160.119:8080"
+//            let userInfoURL = URL(string: "\(baseURL)/student/\(userName)")!
+//
+//            AF.request(userInfoURL, method: .get).responseJSON { response in
+//                switch response.result {
+//                case .success:
+//                    if let data = response.data {
+//                        do {
+//                            // 서버에서 받아온 JSON 데이터 파싱하여 사용자 정보 모델로 변환
+//                            let decoder = JSONDecoder()
+//                            let userInfo = try decoder.decode(UserInfoModel.self, from: data)
+//
+//                            // MyPageViewController로 사용자 정보를 전달하고 표시
+//                            let myPageViewController = MyPageViewController()
+//                            myPageViewController.userInfo = userInfo
+//                            self.navigationController?.pushViewController(myPageViewController, animated: true)
+//                        } catch {
+//                            print("Error parsing JSON: \(error)")
+//                        }
+//                    }
+//                case .failure(let error):
+//                    print("Error fetching user info: \(error)")
+//                }
+//            }
 //        }
     }
+
+    
+    func presentLoginScreen() { }
     
     func presentMainScreen() {
-        // 메인 화면으로 이동하는 코드를 작성합니다.
-        // 예를 들어, storyboard를 사용한다면:
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        if let MainHomeViewController = storyboard.instantiateViewController(withIdentifier: "MainHomeViewController") as? MainHomeViewController {
             navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
-//        }
     }
     
     

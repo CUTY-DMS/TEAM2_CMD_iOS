@@ -1,6 +1,15 @@
 PODS:
   - Alamofire (5.7.1)
   - DropDown (2.3.13)
+  - PromiseKit (8.1.0):
+    - PromiseKit/CorePromise (= 8.1.0)
+    - PromiseKit/Foundation (= 8.1.0)
+    - PromiseKit/UIKit (= 8.1.0)
+  - PromiseKit/CorePromise (8.1.0)
+  - PromiseKit/Foundation (8.1.0):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (8.1.0):
+    - PromiseKit/CorePromise
   - SnapKit (5.6.0)
   - SwiftyJSON (5.0.1)
   - Then (3.0.0)
@@ -8,6 +17,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - DropDown
+  - PromiseKit
   - SnapKit
   - SwiftyJSON
   - Then
@@ -16,6 +26,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - DropDown
+    - PromiseKit
     - SnapKit
     - SwiftyJSON
     - Then
@@ -23,10 +34,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
+  PromiseKit: b2aa70b27a5592499347efbb4dff1169cd8ce0b2
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   Then: 844265ae87834bbe1147d91d5d41a404da2ec27d
 
-PODFILE CHECKSUM: 2ca7cdbb32877c8f81f06a9a6fb78ba510e8233f
+PODFILE CHECKSUM: 37c6605878a1723e9483169a141eadabf00e2839
 
 COCOAPODS: 1.12.1

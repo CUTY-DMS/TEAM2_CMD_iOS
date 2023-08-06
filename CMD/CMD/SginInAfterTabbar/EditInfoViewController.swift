@@ -8,17 +8,14 @@
 import UIKit
 import SnapKit
 import Then
+import Alamofire
 
 class EditInfoViewController: UIViewController {
 
-    var editName: String = "이태규"
-    var editClassNum: String = "1212"
-    var editBirthday: String = "070410"
-    var editFieldOfStudy: String = "iOS"
-    var editMajorClub: String = "RMA"
+    var userInfo: UserInfoModel?
     
     @objc func edit(_ sender: UIButton) {
-        self.editInfoSuccessButton.addTarget(self, action: #selector(self.editPop), for: .touchUpInside)
+        self.editInfoSuccessButton.addTarget(self, action: #selector(self.didTapSaveButton), for: .touchUpInside)
     }
     
     let editInfoLabel = UILabel().then {
@@ -133,7 +130,18 @@ class EditInfoViewController: UIViewController {
         // Do any additional setup after loading the view.
         addSubView()
         setLayout()
-        self.editInfoSuccessButton.addTarget(self, action: #selector(self.editPop), for: .touchUpInside)
+        self.editInfoSuccessButton.addTarget(self, action: #selector(self.updateStudentInfo), for: .touchUpInside)
+    }
+    
+    func setMyProfile() {
+        if let userInfo = userInfo {
+            var classNum: String = String(userInfo.grader) + String(userInfo.schoolClass) + String(userInfo.number)
+            nameTextField.text = userInfo.username
+            classNumTextField.text = classNum
+            birthDayTextField.text = userInfo.birthday
+            fieldOfStudyTextField.text = userInfo.majorType
+            majorClubTextField.text = userInfo.club
+        }
     }
     
     func addSubView() {
@@ -160,16 +168,56 @@ class EditInfoViewController: UIViewController {
         }
     }
     
-    @objc func editPop() {
-        editName = nameTextField.text!
-        editClassNum = classNumTextField.text!
-        editBirthday = birthDayTextField.text!
-        editFieldOfStudy = fieldOfStudyTextField.text!
-        editMajorClub = majorClubTextField.text!
+    @objc func updateStudentInfo(username: String, grader: String, schoolClass: String, number: String, major: String, club: String, birth: String) {
+        let baseURL = "http://52.65.160.119:8080"
+        let EditInfoURL = URL(string: "\(baseURL)/student")!
 
-        self.navigationController?.pushViewController(MyPageViewController(), animated: true)
-//        self.navigationController?.popViewController(animated: true)
-    }
+            // 요청에 필요한 파라미터 설정
+            let parameters: [String: Any] = [
+                "username": username,
+                "grader": grader,
+                "schoolClass": schoolClass,
+                "number": number,
+                "major": major,
+                "club": club,
+                "birth": birth
+            ]
+
+            // Alamofire를 사용하여 PUT 메서드로 요청 보냄
+        AF.request(EditInfoURL, method: .patch, parameters: parameters).responseJSON { [self] response in
+                switch response.result {
+                case .success:
+                    // 학생 정보 수정 성공 시, 처리 로직 추가
+                    userInfo?.username = nameTextField.text!
+//                    classNumTextField.text = classNum
+                    userInfo?.birthday = birthDayTextField.text!
+                    userInfo?.majorType = fieldOfStudyTextField.text!
+                    userInfo?.club = majorClubTextField.text!
+                    self.navigationController?.pushViewController(SginInAfterTabBarController(), animated: true)
+                    print("학생 정보 수정 성공!")
+                case .failure(let error):
+                    // 학생 정보 수정 실패 시, 에러 처리
+                    print("학생 정보 수정 실패: \(error)")
+                }
+            }
+        }
+    
+    @objc func didTapSaveButton() {
+            // 수정할 학생 정보들
+        let username = nameTextField.text
+        let grader = "1"
+        let schoolClass = "2"
+        let number = "12"
+//        let grader = gradeTextField.text
+//        let schoolClass = schoolClassTextField.text
+//        let number = classNumberTextField.text
+        let major = fieldOfStudyTextField.text
+        let club = majorClubTextField.text
+        let birth = birthDayTextField.text
+
+            // 학생 정보 수정 API 호출
+        updateStudentInfo(username: username!, grader: grader, schoolClass: schoolClass, number: number, major: major!, club: club!, birth: birth!)
+        }
     
     func setLayout() {
         editInfoLabel.snp.makeConstraints {

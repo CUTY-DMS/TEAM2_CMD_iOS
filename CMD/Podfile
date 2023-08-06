@@ -11,4 +11,5 @@ target 'CMD' do
   pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'DropDown'
+  pod 'PromiseKit'
 end

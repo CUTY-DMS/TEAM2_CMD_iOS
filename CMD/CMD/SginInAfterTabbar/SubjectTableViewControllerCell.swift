@@ -12,7 +12,7 @@ import Then
 
 class SubjectTableViewControllerCell: UITableViewCell {
     
-    let whiteBtn = UIButton().then {
+    let yellowBtn = UIButton().then {
         $0.backgroundColor = UIColor(named: "Main1")
         $0.layer.cornerRadius = 10
         $0.layer.shadowColor = UIColor.gray.cgColor
@@ -20,13 +20,13 @@ class SubjectTableViewControllerCell: UITableViewCell {
         $0.layer.shadowOffset = CGSize.zero
         $0.layer.shadowRadius = 2
     }
-    let numClass = UILabel().then {
+    var numClass = UILabel().then {
         $0.textColor = .black
-        $0.text = "1교시"
+        $0.text = ""
     }
-    let subject = UILabel().then {
+    var subject = UILabel().then {
         $0.textColor = .black
-        $0.text = "지니"
+        $0.text = ""
         $0.font = UIFont.systemFont(ofSize: 25, weight: .bold)
     }
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -40,7 +40,7 @@ class SubjectTableViewControllerCell: UITableViewCell {
     
     func contentView() {
         [
-            whiteBtn,
+            yellowBtn,
             numClass,
             subject
         ].forEach {
@@ -49,7 +49,7 @@ class SubjectTableViewControllerCell: UITableViewCell {
     }
     
     func setLayout() {
-        whiteBtn.snp.makeConstraints {
+        yellowBtn.snp.makeConstraints {
             $0.top.equalToSuperview().inset(11)
             $0.left.equalToSuperview().inset(1)
             $0.right.equalToSuperview().inset(1)

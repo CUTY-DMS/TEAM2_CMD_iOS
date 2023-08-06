@@ -11,105 +11,116 @@
 import UIKit
 import SnapKit
 import Then
-import DropDown
+import Alamofire
 
-var subjectTableModel: [SubjectTableModel] = []
+//struct TimetableData: Codable {
+//    let PERIO: String
+//    let ITRT_CNTNT: String
+//    let GRADE: String
+//    let CLASS_NM: String
+//    let ALL_TI_YMD: String
+//}
+//struct TimetableResult: Decodable {
+//    let hisTimetable: [HisTimetable]
+//}
+//
+//struct HisTimetable: Decodable {
+//    let row: [TimetableRow]
+//}
+//
+//struct TimetableRow: Decodable {
+//    let ITRT_CNTNT: String
+//}
+
+struct TimetableData {
+    let period: String
+    let content: String
+}
 
 class MainHomeViewController: UIViewController {
-    let dropDown = DropDown().then {
-        $0.dataSource = [
-            "1-1",
-            "1-2",
-            "1-3",
-            "1-4",
-            "2-1",
-            "2-2",
-            "2-3",
-            "2-4",
-            "3-1",
-            "3-2",
-            "3-3",
-            "3-4"
-        ]
-        $0.backgroundColor = UIColor.white
-        $0.cornerRadius = 5
-    }
     
-    let MainLabel = UILabel().then {
+    var timetableData: [TimetableData] = []
+    
+    private let MainLabel = UILabel().then {
         $0.text = "시간표"
         $0.font = UIFont.systemFont(ofSize: 50, weight: .bold)
-//        $0.textColor = .white
         $0.textColor = .black
     }
-    let dateLabel = UILabel().then {
-        $0.text = "2023년 07월 11일 화요일"
-//        $0.textColor = .white
+    var dateLabel = UILabel().then {
+        $0.text = "2023년 07월 4일 화요일"
+        //        $0.textColor = .white
         $0.textColor = .black
         $0.font = UIFont.systemFont(ofSize: 15)
-    }
-    let dropDownButton = UIButton().then {
-        $0.setTitle("1-2", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor(named: "Main1")?.cgColor
-        $0.layer.cornerRadius = 5
-        $0.layer.shadowColor = UIColor.gray.cgColor
-        $0.layer.shadowOpacity = 1.0
-        $0.layer.shadowOffset = CGSize.zero
-        $0.layer.shadowRadius = 1
     }
     let tableView = UITableView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.register(SubjectTableViewControllerCell.self, forCellReuseIdentifier: "SubjectTableViewControllerCell")
         $0.separatorStyle = .none
-//        $0.backgroundColor = UIColor(named: "Main1")
         $0.backgroundColor = .white
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .red
-//        view.backgroundColor = UIColor(named: "Main1")
-        dropDown.anchorView = dropDownButton
-        dropDown.bottomOffset = CGPoint(x: 0, y: 40)
-//        (dropDown.anchorView?.plainView.bounds.height)!
-          view.backgroundColor = .white
+        view.backgroundColor = .white
         print("4")
         // Do any additional setup after loading the view.
-
+        
+        fetchTimetable()
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.rowHeight = 100
-        
-        dropDownButton.addTarget(self, action: #selector(showDropDown), for: .touchUpInside)
-        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-        dropDownButton.setTitle(item, for: .normal)
-//            self.updateTableView(with: item)
-            //API 들어와야함.
-        }
     }
+
+    private func fetchTimetable() {
+            let apiURL = "https://open.neis.go.kr/hub/hisTimetable"
+            let parameters: [String: Any] = [
+                "TYPE": "json",
+                "ATPT_OFCDC_SC_CODE": "G10",
+                "SD_SCHUL_CODE": "7430310",
+                "ALL_TI_YMD": "20230704",
+                "KEY": "513aa74951a64b0793c9a0519e3e4bde",
+                "GRADE": "1",
+                "CLASS_NM": "2"
+            ]
+            
+            AF.request(apiURL, parameters: parameters).responseJSON { [weak self] response in
+                guard let self = self else { return }
+                switch response.result {
+                case .success(let value):
+                    if let json = value as? [String: Any],
+                       let hisTimetable = json["hisTimetable"] as? [[String: Any]],
+                       let rows = hisTimetable.last?["row"] as? [[String: Any]] {
+                        self.parseTimetableData(rows: rows)
+                    }
+                case .failure(let error):
+                    print("Error fetching timetable: \(error)")
+                }
+            }
+        }
+    
+    private func parseTimetableData(rows: [[String: Any]]) {
+            for row in rows {
+                if let period = row["PERIO"] as? String,
+                   let content = row["ITRT_CNTNT"] as? String {
+                    let timetableEntry = TimetableData(period: period, content: content)
+                    timetableData.append(timetableEntry)
+                }
+            }
+            tableView.reloadData()
+        }
+    
     override func viewDidLayoutSubviews() {
         addSubView()
         setLayout()
     }
-    
-//    func updateTableView(with selectedItem: String) {
-//        subjectTableModel.append(SubjectTableModel(subjectTitleName: ["HI", "Hello", "wjWjf"]))
-//    }
-    
-    @objc func showDropDown() {
-        dropDown.show()
-    }
-    
     func addSubView() {
         [
             MainLabel,
             dateLabel,
-            dropDownButton,
             tableView
         ].forEach({view.addSubview($0)})
     }
-    
     func setLayout() {
         MainLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(100)
@@ -119,11 +130,7 @@ class MainHomeViewController: UIViewController {
             $0.top.equalTo(MainLabel).inset(100)
             $0.left.equalToSuperview().inset(30)
         }
-        dropDownButton.snp.makeConstraints {
-            $0.top.equalTo(MainLabel).inset(85)
-            $0.left.equalTo(dateLabel).inset(280)
-            $0.right.equalToSuperview().inset(25)
-        }
+
         tableView.snp.makeConstraints {
             $0.top.equalTo(dateLabel).inset(20)
             $0.left.equalToSuperview().inset(13)
@@ -135,17 +142,14 @@ class MainHomeViewController: UIViewController {
 
 extension MainHomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return timetableData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let customCell = tableView.dequeueReusableCell(withIdentifier: "SubjectTableViewControllerCell", for: indexPath) as! SubjectTableViewControllerCell
-        // subjectTableModel 이라는 변수 안에, SubjectTableModel이라는 구조체가 있고,
-        // 그 구조체 안에 subjectTitleName 이라는 배열(?)이 존재
-        
-        // 아니면 requset랑 response로 따로따로 받아와야함 위에 dropdown에서 requset랑 response를 받아도 될듯.
-        // 배열 한개만 있어도 괜찮을 수도. 그렇게 되면 셀 갯수도 배열 갯수로 설정해야 함.
-//        customCell.subject.text = subjectTableModel[indexPath.row].subjectTitleName
+
+        let timetableEntry = timetableData[indexPath.row]
+        customCell.subject.text = "\(timetableEntry.period)교시: \(timetableEntry.content)"
         
         return customCell
     }
