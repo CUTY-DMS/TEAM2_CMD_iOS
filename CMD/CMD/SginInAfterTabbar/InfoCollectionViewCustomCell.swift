@@ -2,7 +2,13 @@ import Foundation
 import SnapKit
 import Then
 
-var studentNameLabel: [String] = ["아니요", "진짜요?", "아 예~~"]
+struct Student {
+    let username: String
+    let grader: Int
+    let schoolClass: Int
+    let number: Int
+    let userId: String
+}
 
 class InfoCollectionViewCustomCell: UICollectionViewCell {
     
@@ -23,6 +29,10 @@ class InfoCollectionViewCustomCell: UICollectionViewCell {
         addSubView()
         setLayout()
     }
+    
+//    func configure(with student: Student) {
+//        nameLabel.text = student.username
+//    }
     
     func addSubView() {
         [
@@ -49,4 +59,5 @@ class InfoCollectionViewCustomCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }

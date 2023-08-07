@@ -9,19 +9,35 @@ import UIKit
 import SnapKit
 import Then
 import Alamofire
+import SwiftyJSON
 
-struct studentTitle: Codable {
-    var id : Int
-    var username : String
-    var grader : Int
-    var schoolClass : Int
-    var number : Int
-}
+//struct studentTitle: Codable {
+//    var id : Int
+//    var username : String
+//    var grader : Int
+//    var schoolClass : Int
+//    var number : Int
+//}
 
 class StudentInfoViewController:
     UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return studentList.count // 셀 개수
+    }
     
-    var studentTitles: [studentTitle] = []
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InfoCollectionViewCustomCell", for: indexPath) as! InfoCollectionViewCustomCell
+        cell.imageView.image = UIImage(named: "MainLogo")
+        //        let student = studentList[indexPath.item]
+        //        cell.configure(with: student)
+        let student = studentList[indexPath.row]
+        cell.nameLabel.text = student.username
+        
+        return cell
+    }
+    
+
+    var studentList: [Student] = []
     
     var collectionView: UICollectionView!
     
@@ -75,58 +91,122 @@ class StudentInfoViewController:
             $0.bottom.equalToSuperview().inset(100)
         }
         
+        fetchStudentList()
+        
         self.collectionView!.register(InfoCollectionViewCustomCell.self, forCellWithReuseIdentifier: InfoCollectionViewCustomCell.identifier)
     }
     
-    //API
-    func fetchAdminNotices() {
-            let baseURL = "http://52.65.160.119:8080"
-            let adminNoticesURL = "\(baseURL)/getStudentList" // 서버 API 엔드포인트 URL for admin notices
-
-            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
+    
+    private func fetchStudentList() {
+        func fetchStudentList() {
+            guard let authToken = authToken else {
+                print("토큰이 없습니다. 로그인을 먼저 해주세요.")
+                return
+            }
+            
+            let url = "http://52.65.160.119:8080/getStudentList"
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(authToken)" // 토큰을 Authorization 헤더에 추가
+            ]
+            
+            AF.request(url, method: .get, headers: headers).responseJSON { response in
                 switch response.result {
-                case .success(let data):
-                    // 서버에서 받아온 JSON 데이터 파싱
-                    do {
-                        let decoder = JSONDecoder()
-                        self.studentTitles = try decoder.decode([studentTitle].self, from: data)
-                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
+                case .success(let value):
+                    let json = JSON(value)
+                    if let studentArray = json.array {
+                        for studentJSON in studentArray {
+                            if let username = studentJSON["username"].string,
+                               let grader = studentJSON["grader"].int,
+                               let schoolClass = studentJSON["schoolClass"].int,
+                               let number = studentJSON["number"].int,
+                               let userId = studentJSON["userId"].string {
+                                let student = Student(username: username, grader: grader, schoolClass: schoolClass, number: number, userId: userId)
+                                self.studentList.append(student)
+                            }
+                        }
+                        // 학생 정보를 가져왔으므로 컬렉션 뷰 리로드
                         self.collectionView.reloadData()
-                    } catch {
-                        print("Error parsing JSON: \(error)")
                     }
                 case .failure(let error):
-                    print("Error fetching admin notices: \(error)")
+                    print("Error fetching student list: \(error)")
                 }
             }
         }
-    
-    
-    // 컬렉션 뷰 데이터 소스 메서드
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return studentTitles.count // 셀 개수
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InfoCollectionViewCustomCell", for: indexPath) as! InfoCollectionViewCustomCell
-        cell.imageView.image = UIImage(named: "MainLogo")
-        
-        let studentTitle = studentTitles[indexPath.item]
-        
-        cell.nameLabel.text = studentTitle.username
         
         
-        return cell
-    }
-    
-    // 컬렉션 뷰 델리게이트 메서드
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let newViewController = StudentInfoModalViewController()
-        newViewController.modalPresentationStyle = .overFullScreen // 아래에서 올라오는 스타일
+        //    private func parseAndDisplayStudentList(jsonArray: [[String: Any]]) {
+        //            var studentList: [Student] = []
+        //            for json in jsonArray {
+        //                if let id = json["id"] as? Int,
+        //                   let username = json["username"] as? String,
+        //                   let grader = json["grader"] as? Int,
+        //                   let schoolClass = json["schoolClass"] as? Int,
+        //                   let number = json["number"] as? Int,
+        //                   let userId = json["userId"] as? String {
+        //                    let student = Student(id: id, username: username, grader: grader, schoolClass: schoolClass, number: number, userId: userId)
+        //                    studentList.append(student)
+        //                }
+        //            }
+        //        self.studentList = studentList
+        //        collectionView.reloadData()
+        //    }
         
-        // 필요한 경우 새로운 뷰 컨트롤러에 데이터를 전달하는 등의 설정 가능
+        //API
+        //    func fetchAdminNotices() {
+        //            let baseURL = "http://52.65.160.119:8080"
+        //            let adminNoticesURL = "\(baseURL)/getStudentList" // 서버 API 엔드포인트 URL for admin notices
+        //
+        //            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
+        //                switch response.result {
+        //                case .success(let data):
+        //                    // 서버에서 받아온 JSON 데이터 파싱
+        //                    do {
+        //                        let decoder = JSONDecoder()
+        //                        self.studentTitles = try decoder.decode([studentTitle].self, from: data)
+        //                        self.collectionView.reloadData()
+        //                    } catch {
+        //                        print("Error parsing JSON: \(error)")
+        //                    }
+        //                case .failure(let error):
+        //                    print("Error fetching admin notices: \(error)")
+        //                }
+        //            }
+        //        }
         
-        present(StudentInfoModalViewController(), animated: true, completion: nil)
-        print("선택한 셀: \(indexPath.item)")
+        
+        // 컬렉션 뷰 데이터 소스 메서드
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            return studentList.count // 셀 개수
+        }
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InfoCollectionViewCustomCell", for: indexPath) as! InfoCollectionViewCustomCell
+            cell.imageView.image = UIImage(named: "MainLogo")
+            //        let student = studentList[indexPath.item]
+            //        cell.configure(with: student)
+            let student = studentList[indexPath.row]
+            cell.nameLabel.text = student.username
+            
+            return cell
+        }
+        // 컬렉션 뷰 델리게이트 메서드
+        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            let newViewController = StudentInfoModalViewController()
+            newViewController.modalPresentationStyle = .overFullScreen // 아래에서 올라오는 스타일
+            
+            // 필요한 경우 새로운 뷰 컨트롤러에 데이터를 전달하는 등의 설정 가능
+            
+            present(StudentInfoModalViewController(), animated: true, completion: nil)
+            print("선택한 셀: \(indexPath.item)")
+        }
+        
+        func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                completion?()
+            }
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion: nil)
+        }
     }
 }

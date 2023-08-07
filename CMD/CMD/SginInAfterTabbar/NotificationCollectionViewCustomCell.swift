@@ -8,11 +8,13 @@
 import SnapKit
 import Then
 
+
 class NotificationCollectionViewCustomCell: UICollectionViewCell {
     static let identifier = "NotificationCollectionViewCustomCell"
     
     let notiFicationTitleLabel = UILabel().then {
         $0.text = "공지사항 제목"
+        $0.numberOfLines = 0
         $0.font = UIFont.systemFont(ofSize: 22, weight: .bold)
     }
     let notiFicationDateLabel = UILabel().then {
@@ -51,6 +53,10 @@ class NotificationCollectionViewCustomCell: UICollectionViewCell {
             $0.left.equalToSuperview().inset(12)
         }
     }
+    
+//    func configure(with notification: NotificationModel) {
+//        notiFicationTitleLabel.text = notification.title
+//    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

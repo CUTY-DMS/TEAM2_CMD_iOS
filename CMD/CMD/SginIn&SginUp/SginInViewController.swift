@@ -11,6 +11,8 @@ import Then
 import Alamofire
 import SwiftyJSON
 
+var authToken: String?
+
 class SginInViewController: UIViewController{
     
     var pwHideCount = 0
@@ -160,6 +162,7 @@ class SginInViewController: UIViewController{
                     let json = JSON(value)
                     if let accessToken = json["accessToken"].string, let refreshToken = json["refreshToken"].string {
                         // 로그인 성공 - Access Token과 Refresh Token 사용
+                        authToken = accessToken
                         print("Access Token: \(accessToken)")
                         print("Refresh Token: \(refreshToken)")
                         
@@ -183,6 +186,12 @@ class SginInViewController: UIViewController{
                     print("네트워크 오류: \(error.localizedDescription)")
                 }
             }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
     
     func checkAutoLogin() {
@@ -212,7 +221,6 @@ class SginInViewController: UIViewController{
                 self.presentLoginScreen()
             }
         }
-
         
 //        func fetchUserInfoFromServer() {
 //            let baseURL = "http://52.65.160.119:8080"
@@ -266,7 +274,7 @@ class SginInViewController: UIViewController{
         }
     }
     @objc func findPWSwift() {
-        self.navigationController?.pushViewController(SginInFindPWViewController(), animated: true)
+        self.navigationController?.pushViewController(TemporaryPasswordViewController(authToken: authToken!), animated: true)
     }
     
     func addSubView() {

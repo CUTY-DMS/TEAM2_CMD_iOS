@@ -110,39 +110,55 @@ class SginUpViewController: UIViewController {
     
     private let gradeTextField = UITextField().then {
         $0.textColor = .black
-//        $0.autocapitalizationType = .none
     }
     private let gradeLabel = UILabel().then {
         $0.text = "학년"
         $0.textColor = .black
-//        $0.font = UIFont.boldSystemFont(ofSize: 50)
     }
     
     private let schoolClassTextField = UITextField().then {
         $0.textColor = .black
-//        $0.autocapitalizationType = .none
     }
     private let schoolClassLabel = UILabel().then {
         $0.text = "반"
         $0.textColor = .black
-//        $0.font = UIFont.boldSystemFont(ofSize: 50)
     }
     
     private let classNumberTextField = UITextField().then {
         $0.textColor = .black
-//        $0.autocapitalizationType = .none
     }
     private let classNumberLabel = UILabel().then {
         $0.text = "번호"
         $0.textColor = .black
-//        $0.font = UIFont.boldSystemFont(ofSize: 50)
     }
     
-    private let birthdayTextField = UITextField().then {
+    
+    private let yearTextField = UITextField().then {
         $0.textColor = .black
-        $0.placeholder = "생년월일"
-        $0.autocapitalizationType = .none
     }
+    private let yearLabel = UILabel().then {
+        $0.text = "년"
+        $0.textColor = .black
+    }
+    
+    private let monthTextField = UITextField().then {
+        $0.textColor = .black
+    }
+    private let monthLabel = UILabel().then {
+        $0.text = "월"
+        $0.textColor = .black
+    }
+    
+    private let dayTextField = UITextField().then {
+        $0.textColor = .black
+    }
+    private let dayLabel = UILabel().then {
+        $0.text = "일"
+        $0.textColor = .black
+    }
+    
+    
+    
     private let fieldOfStudyTextField = UITextField().then {
         $0.textColor = .black
         $0.placeholder = "전공분야"
@@ -178,7 +194,13 @@ class SginUpViewController: UIViewController {
     let classNumberUnderlineView = UIView().then {
         $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
     }
-    let birthdayUnderlineView = UIView().then {
+    let yearUnderlineView = UIView().then {
+        $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
+    }
+    let monthUnderlineView = UIView().then {
+        $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
+    }
+    let dayUnderlineView = UIView().then {
         $0.backgroundColor = UIColor.lightGray // 밑줄 색상 설정
     }
     let fieldOfStudyUnderlineView = UIView().then {
@@ -199,8 +221,6 @@ class SginUpViewController: UIViewController {
         $0.layer.shadowOffset = CGSize.zero
         $0.layer.shadowRadius = 2
     }
-    
-    
     
     private let goSignInLabel = UILabel().then {
         $0.text = "계정이 있으신가요?"
@@ -231,6 +251,10 @@ class SginUpViewController: UIViewController {
         
         self.sginUpPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide1), for: .touchUpInside)
         self.sginUpCheckPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide2), for: .touchUpInside)
+    }
+    
+    @objc private func closePopup() {
+        dismiss(animated: true, completion: nil)
     }
     
     //비번 부분 눈 깜박깜박하는 기능
@@ -270,11 +294,16 @@ class SginUpViewController: UIViewController {
               let grade = gradeTextField.text, !grade.isEmpty,
               let schoolClass = schoolClassTextField.text, !schoolClass.isEmpty,
               let classNumber = classNumberTextField.text, !classNumber.isEmpty,
-              let birthday = birthdayTextField.text, !birthday.isEmpty,
+              let year = yearTextField.text, !year.isEmpty,
+              let month = monthTextField.text, !month.isEmpty,
+              let day = dayTextField.text, !day.isEmpty,
               let fieldOfStudy = fieldOfStudyTextField.text, !fieldOfStudy.isEmpty,
               let majorClub = majorClubTextField.text, !majorClub.isEmpty else {
             // 하나 이상의 필수 입력 필드가 비어있는 경우
             print("필수 정보를 모두 입력해주세요.")
+            let popupViewController = EmptyPopupViewController()
+            popupViewController.modalPresentationStyle = .overCurrentContext
+            self.present(popupViewController, animated: true, completion: nil)
             return
         }
 
@@ -282,52 +311,64 @@ class SginUpViewController: UIViewController {
         let baseUrl = "http://52.65.160.119:8080"
         let duplicateIDEndpoint = "\(baseUrl)/userId"
 
-        // 아이디 중복 확인
-        let idParameters: [String: Any] = ["userId": userID]
-        AF.request(duplicateIDEndpoint, method: .post, parameters: idParameters)
-            .responseJSON { response in
-                switch response.result {
-                case .success(let data):
-                    if let result = data as? [String: Any], let isDuplicate = result["isDuplicate"] as? Bool, isDuplicate {
-                        // 아이디가 중복됨
-                        print("아이디가 이미 존재합니다.")
-                        return
-                    } else {
-                        // 아이디 중복되지 않음, 회원가입 API 호출
-                        let apiEndpoint = "\(baseUrl)/signup/student"
-                        let parameters: [String: Any] = [
-                            "userId": userID,
-                            "password": password,
-                            "username": username,
-                            "userEmail": email,
-                            "grader": grade,
-                            "schoolClass": schoolClass,
-                            "number": classNumber,
-                            "majorType": fieldOfStudy,
-                            "club": majorClub,
-                            "birth": birthday
-                        ]
-
-                        AF.request(apiEndpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-                            .responseJSON { response in
-                                switch response.result {
-                                case .success(let data):
-                                    // 회원가입 성공 처리
-                                    print("회원가입 성공! 응답 데이터: \(data)")
-                                    //이거 오류 메세지는 뜨는데 데이터베이스에는 들어가는듯. 상관 X
-                                    self.navigationController?.pushViewController(SginInViewController(), animated: true)
-                                case .failure(let error):
-                                    // 회원가입 실패 처리
-                                    print("회원가입 실패! 오류: \(error.localizedDescription)")
+        if sginUpPWTextField.text == checkPWTextField.text {
+            // 아이디 중복 확인
+            let idParameters: [String: Any] = ["userId": userID]
+            AF.request(duplicateIDEndpoint, method: .post, parameters: idParameters)
+                .responseJSON { response in
+                    switch response.result {
+                    case .success(let data):
+                        if let result = data as? [String: Any], let isDuplicate = result["isDuplicate"] as? Bool, isDuplicate {
+                            // 아이디가 중복됨
+                            print("아이디가 이미 존재합니다.")
+                            let popupViewController = IdDuplicationPopupViewController()
+                            popupViewController.modalPresentationStyle = .overCurrentContext
+                            self.present(popupViewController, animated: true, completion: nil)
+                            return
+                        } else {
+                            // 아이디 중복되지 않음, 회원가입 API 호출
+                            let apiEndpoint = "\(baseUrl)/signup/student"
+                            let parameters: [String: Any] = [
+                                "userId": userID,
+                                "password": password,
+                                "username": username,
+                                "userEmail": email,
+                                "grader": grade,
+                                "schoolClass": schoolClass,
+                                "number": classNumber,
+                                "majorType": fieldOfStudy,
+                                "club": majorClub,
+                                "year": year,
+                                "month": month,
+                                "day": day
+                            ]
+                            
+                            AF.request(apiEndpoint, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                                .responseJSON { response in
+                                    switch response.result {
+                                    case .success(let data):
+                                        // 회원가입 성공 처리
+                                        print("회원가입 성공! 응답 데이터: \(data)")
+                                        //이거 오류 메세지는 뜨는데 데이터베이스에는 들어가는듯. 상관 X
+                                        self.navigationController?.pushViewController(SginInViewController(), animated: true)
+                                    case .failure(let error):
+                                        // 회원가입 실패 처리
+                                        print("회원가입 실패! 오류: \(error.localizedDescription)")
+                                    }
                                 }
-                            }
+                        }
+                        
+                    case .failure(let error):
+                        // 아이디 중복 확인 실패 처리
+                        print("아이디 중복 확인 실패! 오류: \(error.localizedDescription)")
                     }
-
-                case .failure(let error):
-                    // 아이디 중복 확인 실패 처리
-                    print("아이디 중복 확인 실패! 오류: \(error.localizedDescription)")
                 }
-            }
+        } else {
+            let popupViewController = differentPWPopupViewController()
+            popupViewController.modalPresentationStyle = .overCurrentContext
+            self.present(popupViewController, animated: true, completion: nil)
+            return
+        }
     }
     func addSubView() {
         [
@@ -356,7 +397,12 @@ class SginUpViewController: UIViewController {
             schoolClassLabel,
             classNumberTextField,
             classNumberLabel,
-            birthdayTextField,
+            yearTextField,
+            yearLabel,
+            monthTextField,
+            monthLabel,
+            dayTextField,
+            dayLabel,
             fieldOfStudyTextField,
             majorClubTextField,
             idUnderlineView,
@@ -367,7 +413,9 @@ class SginUpViewController: UIViewController {
             gradeUnderlineView,
             schoolClassUnderlineView,
             classNumberUnderlineView,
-            birthdayUnderlineView,
+            yearUnderlineView,
+            monthUnderlineView,
+            dayUnderlineView,
             fieldOfStudyUnderlineView,
             majorClubUnderlineView
         ].forEach {
@@ -464,14 +512,42 @@ class SginUpViewController: UIViewController {
             $0.left.equalTo(classNumberTextField).inset(70)
             $0.right.equalToSuperview().inset(20)
         }
-        
-        birthdayTextField.snp.makeConstraints {
+
+        yearTextField.snp.makeConstraints {
             $0.top.equalTo(gradeTextField).inset(102)
             $0.left.equalToSuperview().inset(30)
-            $0.right.equalToSuperview().inset(30)
+            $0.right.equalTo(yearLabel).inset(80)
         }
+        yearLabel.snp.makeConstraints {
+            $0.top.equalTo(gradeTextField).inset(102)
+            $0.left.equalTo(gradeTextField).inset(70)
+            $0.right.equalTo(monthTextField).inset(20)
+        }
+        
+        monthTextField.snp.makeConstraints {
+            $0.top.equalTo(gradeTextField).inset(102)
+            $0.left.equalTo(yearLabel).inset(40)
+            $0.right.equalTo(monthLabel).inset(70)
+        }
+        monthLabel.snp.makeConstraints {
+            $0.top.equalTo(gradeLabel).inset(102)
+            $0.left.equalTo(monthTextField).inset(60)
+            $0.right.equalTo(dayTextField).inset(20)
+        }
+        
+        dayTextField.snp.makeConstraints {
+            $0.top.equalTo(gradeTextField).inset(102)
+            $0.left.equalTo(monthLabel).inset(25)
+            $0.right.equalTo(dayLabel).inset(55)
+        }
+        dayLabel.snp.makeConstraints {
+            $0.top.equalTo(gradeTextField).inset(102)
+            $0.left.equalTo(dayTextField).inset(70)
+            $0.right.equalToSuperview().inset(20)
+        }
+        
         fieldOfStudyTextField.snp.makeConstraints {
-            $0.top.equalTo(birthdayTextField).inset(102)
+            $0.top.equalTo(yearTextField).inset(102)
             $0.left.equalToSuperview().inset(30)
             $0.right.equalToSuperview().inset(30)
         }
@@ -548,13 +624,25 @@ class SginUpViewController: UIViewController {
             $0.right.equalToSuperview().inset(75)
             $0.bottom.equalTo(gradeTextField).inset(-4)
         }
-        
-        birthdayUnderlineView.snp.makeConstraints {
-            $0.top.equalTo(birthdayTextField).inset(25)
+        yearUnderlineView.snp.makeConstraints {
+            $0.top.equalTo(yearTextField).inset(25)
             $0.left.equalToSuperview().inset(25)
-            $0.right.equalToSuperview().inset(31)
-            $0.bottom.equalTo(birthdayTextField).inset(-4)
+            $0.right.equalTo(monthUnderlineView).inset(100)
+            $0.bottom.equalTo(yearTextField).inset(-4)
         }
+        monthUnderlineView.snp.makeConstraints {
+            $0.top.equalTo(yearTextField).inset(25)
+            $0.left.equalTo(yearUnderlineView).inset(115)
+            $0.right.equalTo(dayUnderlineView).inset(90)
+            $0.bottom.equalTo(yearTextField).inset(-4)
+        }
+        dayUnderlineView.snp.makeConstraints {
+            $0.top.equalTo(yearTextField).inset(25)
+            $0.left.equalTo(monthUnderlineView).inset(85)
+            $0.right.equalToSuperview().inset(75)
+            $0.bottom.equalTo(yearTextField).inset(-4)
+        }
+        
         fieldOfStudyUnderlineView.snp.makeConstraints {
             $0.top.equalTo(fieldOfStudyTextField).inset(25)
             $0.left.equalToSuperview().inset(25)

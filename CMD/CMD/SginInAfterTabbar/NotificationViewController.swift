@@ -9,16 +9,19 @@ import UIKit
 import SnapKit
 import Then
 import Alamofire
+import PromiseKit
 
-struct notice: Codable {
-    let title: String
-    let expiredAt: String?
+struct myNotice: Decodable {
+    var title: String
+    var expiredAt: Date
+    var content: String
 }
 
 class NotificationViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
-    var notices: [notice] = []
-    
+    var token: String = authToken != nil ? authToken! : ""
+    var notices: [myNotice] = []
+
     var collectionView: UICollectionView!
     
     let titleLabel = UILabel().then {
@@ -33,8 +36,17 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         print("8")
         // Do any additional setup after loading the view.
         
-        // 컨테이너 뷰 생성
-        fetchAdminNotices()
+        // 공지사항 리스트 가져오기
+        firstly {
+            NoticeService.fetchNoticeList(withToken: token)
+        }.done { notices in
+            // 공지사항 리스트를 가져온 후에 컬렉션 뷰를 리로드하여 데이터를 표시합니다.
+            self.notices = notices
+            self.collectionView.reloadData()
+        }.catch { error in
+            print("Error fetching notices: \(error)")
+        }
+        
         
         let containerView = UIView()
         containerView.backgroundColor = UIColor(named: "Main1")
@@ -78,28 +90,27 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
     
     
     //API
-    func fetchAdminNotices() {
-            let baseURL = "http://52.65.160.119:8080"
-            let adminNoticesURL = "\(baseURL)/notification/list" // 서버 API 엔드포인트 URL for admin notices
-
-            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
-                switch response.result {
-                case .success(let data):
-                    // 서버에서 받아온 JSON 데이터 파싱
-                    do {
-                        let decoder = JSONDecoder()
-                        self.notices = try decoder.decode([notice].self, from: data)
-                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
-                        self.collectionView.reloadData()
-                    } catch {
-                        print("Error parsing JSON: \(error)")
-                    }
-                case .failure(let error):
-                    print("Error fetching admin notices: \(error)")
-                }
-            }
-        }
-    
+//    func fetchAdminNotices() {
+//            let baseURL = "http://52.65.160.119:8080"
+//            let adminNoticesURL = "\(baseURL)/notification/list" // 서버 API 엔드포인트 URL for admin notices
+//
+//            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
+//                switch response.result {
+//                case .success(let data):
+//                    // 서버에서 받아온 JSON 데이터 파싱
+//                    do {
+//                        let decoder = JSONDecoder()
+//                        self.notices = try decoder.decode([notice].self, from: data)
+//                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
+//                        self.collectionView.reloadData()
+//                    } catch {
+//                        print("Error parsing JSON: \(error)")
+//                    }
+//                case .failure(let error):
+//                    print("Error fetching admin notices: \(error)")
+//                }
+//            }
+//        }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return notices.count
@@ -108,10 +119,13 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NotificationCollectionViewCustomCell", for: indexPath) as! NotificationCollectionViewCustomCell
         
-        let notice = notices[indexPath.item]
-        
+        let notice = notices[indexPath.row]
         cell.notiFicationTitleLabel.text = notice.title
-        cell.notiFicationDateLabel.text = notice.expiredAt
+        
+        // Date를 원하는 형식으로 변환하여 레이블에 설정
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        cell.notiFicationDateLabel.text = dateFormatter.string(from: notice.expiredAt)
         
         return cell
     }
@@ -120,11 +134,24 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let newViewController = NotificationModalViewController()
         newViewController.modalPresentationStyle = .overFullScreen // 아래에서 올라오는 스타일
-        
-        // 필요한 경우 새로운 뷰 컨트롤러에 데이터를 전달하는 등의 설정 가능
+
+//        let selectedNotification = notificationList[indexPath.item]
+
+//        let notificationDetailVC = NotificationModalViewController()
+//        notificationDetailVC.notificationTitle = selectedNotification.title
+//        notificationDetailVC.notificationContent = selectedNotification.content
         
         present(NotificationModalViewController(), animated: true, completion: nil)
         print("선택한 셀: \(indexPath.item)")
     }
 
+    
+    func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+                completion?()
+            }
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion: nil)
+        }
 }
