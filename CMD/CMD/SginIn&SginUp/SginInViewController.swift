@@ -18,19 +18,6 @@ class SginInViewController: UIViewController{
     var pwHideCount = 0
     var userName: String = ""
     
-    @objc func loginBtn(_ sender: UIButton) {
-        self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
-    }
-    @objc func goSginUpBtn(_ sender: UIButton) {
-        self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
-    }
-    @objc func loginPWHideBtn(_ sender: UIButton) {
-        self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
-    }
-    @objc func findPWBtn(_ sender: UIButton) {
-        self.findPWClickedBtn.addTarget(self, action: #selector(self.findPWSwift), for: .touchUpInside)
-    }
-    
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
         $0.textColor = .black
@@ -76,8 +63,7 @@ class SginInViewController: UIViewController{
         button.backgroundColor = .white
         return button
     }()
-    
-    
+
     private let loginClickedBtn = UIButton().then {
         $0.backgroundColor = UIColor(named: "Main1")
         $0.setTitle("로그인", for: .normal)
@@ -118,7 +104,7 @@ class SginInViewController: UIViewController{
         setLayout()
         setLayoutUnderLine()
         checkAutoLogin()
-        self.navigationController?.navigationBar.isHidden = true;
+        self.navigationController?.navigationBar.isHidden = true
         self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
         self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
         self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
@@ -138,7 +124,20 @@ class SginInViewController: UIViewController{
         return UserDefaults.standard.string(forKey: "accessToken")
     }
     //**
-    
+
+    @objc func loginBtn(_ sender: UIButton) {
+        self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
+    }
+    @objc func goSginUpBtn(_ sender: UIButton) {
+        self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
+    }
+    @objc func loginPWHideBtn(_ sender: UIButton) {
+        self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
+    }
+    @objc func findPWBtn(_ sender: UIButton) {
+        self.findPWClickedBtn.addTarget(self, action: #selector(self.findPWSwift), for: .touchUpInside)
+    }
+
     @objc func MainVCSwift() {
         guard let userId = loginIDTextField.text, let password = loginPWTextField.text else {
             return
@@ -292,59 +291,57 @@ class SginInViewController: UIViewController{
             goSignUpClickedBtn,
             findPWLabel,
             findPWClickedBtn
-        ].forEach {
-            view.addSubview($0)
-        }
+        ].forEach { view.addSubview($0) }
     }
     
     func setLayout() {
         loginLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(110)
             $0.left.equalToSuperview().inset(50)
-        }
+        } // 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         loginIDTextField.snp.makeConstraints {
             $0.top.equalTo(loginLabel).inset(200)
             $0.left.equalToSuperview().inset(40)
             $0.right.equalToSuperview().inset(30)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         loginPWTextField.snp.makeConstraints {
             $0.top.equalTo(loginIDTextField).inset(80)
             $0.left.equalToSuperview().inset(40)
             $0.right.equalToSuperview().inset(70)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         loginPWHideClickedBtn.snp.makeConstraints {
             $0.top.equalTo(loginPWTextField)
             $0.left.equalTo(loginPWTextField).inset(320)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         loginUsernameTextField.snp.makeConstraints {
             $0.top.equalTo(loginPWTextField).inset(80)
             $0.left.equalToSuperview().inset(40)
             $0.right.equalToSuperview().inset(30)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         loginClickedBtn.snp.makeConstraints {
             $0.top.equalTo(PWUnderlineView).inset(200)
             $0.left.equalToSuperview().inset(35)
             $0.right.equalToSuperview().inset(35)
             $0.bottom.equalTo(goSignUpLabel).inset(32)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         goSignUpLabel.snp.makeConstraints {
             $0.top.equalTo(loginClickedBtn).inset(64)
             $0.left.equalToSuperview().inset(132)
             $0.bottom.equalToSuperview().inset(240)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         goSignUpClickedBtn.snp.makeConstraints {
             $0.top.equalTo(loginClickedBtn).inset(58)
             $0.left.equalTo(goSignUpLabel).inset(95)
             $0.bottom.equalToSuperview().inset(233)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         findPWLabel.snp.makeConstraints {
             $0.top.equalTo(goSignUpLabel).inset(22)
             $0.left.equalToSuperview().inset(101)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         findPWClickedBtn.snp.makeConstraints {
             $0.top.equalTo(goSignUpLabel).inset(16)
             $0.left.equalTo(findPWLabel).inset(126)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
     }
     
     func setLayoutUnderLine() {
@@ -353,18 +350,18 @@ class SginInViewController: UIViewController{
             $0.left.equalToSuperview().inset(35)
             $0.right.equalToSuperview().inset(31)
             $0.bottom.equalTo(loginIDTextField).inset(-4)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         PWUnderlineView.snp.makeConstraints {
             $0.top.equalTo(loginPWTextField).inset(25)
             $0.left.equalToSuperview().inset(35)
             $0.right.equalToSuperview().inset(31)
             $0.bottom.equalTo(loginPWTextField).inset(-5)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
         usernameUnderlineView.snp.makeConstraints {
             $0.top.equalTo(loginUsernameTextField).inset(25)
             $0.left.equalToSuperview().inset(35)
             $0.right.equalToSuperview().inset(31)
             $0.bottom.equalTo(loginUsernameTextField).inset(-4)
-        }
+        }// 이렇게 하면 다른 핸드폰 크기로 하면 레이아웃 다르게 됩니다.
     }
 }
