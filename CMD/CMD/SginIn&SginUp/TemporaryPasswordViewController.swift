@@ -33,24 +33,7 @@ class TemporaryPasswordViewController: UIViewController {
         setupUI()
     }
     
-    private func setupUI() {
-        view.backgroundColor = .white
         
-        view.addSubview(emailTextField)
-        view.addSubview(getPasswordButton)
-        
-        emailTextField.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-50)
-            make.width.equalToSuperview().multipliedBy(0.7)
-        }
-        
-        getPasswordButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(emailTextField.snp.bottom).offset(20)
-        }
-    }
-    
     @objc private func fetchTemporaryPassword() {
         let temporaryPasswordURL = "http://52.65.160.119:8080/findPassword"
         
@@ -86,4 +69,23 @@ class TemporaryPasswordViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+    
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        view.addSubview(emailTextField)
+        view.addSubview(getPasswordButton)
+        
+        emailTextField.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview().offset(-50)
+            $0.width.equalToSuperview().multipliedBy(0.7)
+        }
+        
+        getPasswordButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(emailTextField.snp.bottom).offset(20)
+        }
+    }
+
 }

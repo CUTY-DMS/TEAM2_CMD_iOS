@@ -1,10 +1,3 @@
-//
-//  MyPageViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/16.
-//
-
 import UIKit
 import SnapKit
 import Then
@@ -12,8 +5,7 @@ import Alamofire
 
 
 class MyPageViewController: UIViewController {
-    
-//    var userInfo: UserInfoModel?
+    //    var userInfo: UserInfoModel?
     var classNum: String = ""
     
     let EditInfoVC = EditInfoViewController()
@@ -141,7 +133,7 @@ class MyPageViewController: UIViewController {
         } else {
             profileClassNumLabel.text = "정보 없음"
         }
-
+        
         if let year = json["year"] as? Int,
            let month = json["month"] as? Int,
            let day = json["day"] as? Int {
@@ -160,7 +152,7 @@ class MyPageViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
-
+    
     
     @objc func editProfile() {
         self.navigationController?.pushViewController(EditInfoViewController(), animated: true)
@@ -224,7 +216,7 @@ class MyPageViewController: UIViewController {
         }
         profileNameLabel.snp.makeConstraints {
             $0.top.equalTo(profileInfoLabel).inset(55)
-            $0.left.equalToSuperview().inset(125)
+            $0.left.equalTo(nameLabel.snp.right).offset(12)
         }
         classNumLabel.snp.makeConstraints {
             $0.top.equalTo(nameLabel).inset(45)

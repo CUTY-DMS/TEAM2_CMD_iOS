@@ -1,36 +1,7 @@
-//
-//  MainHomeViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/11.
-//
-
-//로그인하면 탭바로 와야할지
-//아니면 메인 화면으로 가야할지
-
 import UIKit
 import SnapKit
 import Then
 import Alamofire
-
-//struct TimetableData: Codable {
-//    let PERIO: String
-//    let ITRT_CNTNT: String
-//    let GRADE: String
-//    let CLASS_NM: String
-//    let ALL_TI_YMD: String
-//}
-//struct TimetableResult: Decodable {
-//    let hisTimetable: [HisTimetable]
-//}
-//
-//struct HisTimetable: Decodable {
-//    let row: [TimetableRow]
-//}
-//
-//struct TimetableRow: Decodable {
-//    let ITRT_CNTNT: String
-//}
 
 struct TimetableData {
     let period: String
@@ -84,7 +55,8 @@ class MainHomeViewController: UIViewController {
                 "CLASS_NM": "2"
             ]
             
-            AF.request(apiURL, parameters: parameters).responseJSON { [weak self] response in
+            AF.request(apiURL, parameters: parameters)
+                .responseJSON { [weak self] response in
                 guard let self = self else { return }
                 switch response.result {
                 case .success(let value):
@@ -149,8 +121,8 @@ extension MainHomeViewController: UITableViewDataSource, UITableViewDelegate {
         let customCell = tableView.dequeueReusableCell(withIdentifier: "SubjectTableViewControllerCell", for: indexPath) as! SubjectTableViewControllerCell
 
         let timetableEntry = timetableData[indexPath.row]
-        customCell.subject.text = "\(timetableEntry.period)교시: \(timetableEntry.content)"
-        
+        customCell.subject.text = "\(timetableEntry.content)"
+        customCell.numClass.text = "\(timetableEntry.period)교시"
         return customCell
     }
 }

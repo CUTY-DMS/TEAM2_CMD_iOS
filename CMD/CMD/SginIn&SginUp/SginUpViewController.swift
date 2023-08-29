@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/09.
-//
-
 import UIKit
 import SnapKit
 import Then
@@ -14,35 +7,11 @@ class SginUpViewController: UIViewController {
     var pwHideCount1 = 0
     var pwHideCount2 = 0
     
-    @objc func sginUpClickedBtn(_ sender: UIButton) {
-        self.sginUpButton.addTarget(self, action: #selector(self.sginupViewShift), for: .touchUpInside)
-    }
-    
-    @objc func goSignInClickedBtn(_ sender: UIButton) {
-        self.goSignInButton.addTarget(self, action: #selector(self.goSginInViewShift), for: .touchUpInside)
-    }
-    
-    // 눈 깜박깜박 부분 버튼 기능
-    @objc func sginUpPWHideClickedBtn(_ sender: UIButton) {
-        self.sginUpPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide1), for: .touchUpInside)
-    }
-    @objc func sginUpCheckPWHideClickedBtn(_ sender: UIButton) {
-        self.sginUpCheckPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide2), for: .touchUpInside)
-    }
-    /* : : : : : : : : : */
-    
     private let sginUpLabel = UILabel().then {
         $0.text = "회원가입"
         $0.textColor = .black
         $0.font = UIFont.boldSystemFont(ofSize: 50)
     }
-    
-//    let scrollView: UIScrollView = {
-//      let scrollView = UIScrollView()
-//      scrollView.backgroundColor = .blue
-//      scrollView.translatesAutoresizingMaskIntoConstraints = false
-//      return scrollView
-//    }()
     
     let scrollView = UIScrollView().then {
         $0.backgroundColor = .white
@@ -246,45 +215,13 @@ class SginUpViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true;
         
         self.sginUpButton.addTarget(self, action: #selector(self.sginupViewShift), for: .touchUpInside)
-        
         self.goSignInButton.addTarget(self, action: #selector(self.goSginInViewShift), for: .touchUpInside)
-        
         self.sginUpPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide1), for: .touchUpInside)
         self.sginUpCheckPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide2), for: .touchUpInside)
     }
     
-    @objc private func closePopup() {
-        dismiss(animated: true, completion: nil)
-    }
-    
     //비번 부분 눈 깜박깜박하는 기능
-    @objc func pwHide1() {
-        if pwHideCount1 == 0 {
-            sginUpPWTextField.isSecureTextEntry = false;
-            pwHideCount1 += 1
-        } else {
-            sginUpPWTextField.isSecureTextEntry = true;
-            pwHideCount1 -= 1
-        }
-    }
-    /* : : : : : : : : :*/
     
-    //비번 확인 부분 눈 깜박깜박하는 기능
-    @objc func pwHide2() {
-        if pwHideCount2 == 0 {
-            checkPWTextField.isSecureTextEntry = false;
-            pwHideCount2 += 1
-        } else {
-            checkPWTextField.isSecureTextEntry = true;
-            pwHideCount2 -= 1
-        }
-    }
-    /* : : : : : : : : :*/
-    
-    @objc func goSginInViewShift() {
-        // 여긴 그냥 로그인 창으로 이동
-        self.navigationController?.pushViewController(SginInViewController(), animated: true)
-    }
     @objc func sginupViewShift() {
         // 회원가입 가능한 정보들을 확인
         guard let userID = sginUpIDTextField.text, !userID.isEmpty,
@@ -306,11 +243,11 @@ class SginUpViewController: UIViewController {
             self.present(popupViewController, animated: true, completion: nil)
             return
         }
-
+        
         // 중복 아이디 확인 API 호출
         let baseUrl = "http://52.65.160.119:8080"
         let duplicateIDEndpoint = "\(baseUrl)/userId"
-
+        
         if sginUpPWTextField.text == checkPWTextField.text {
             // 아이디 중복 확인
             let idParameters: [String: Any] = ["userId": userID]
@@ -512,7 +449,7 @@ class SginUpViewController: UIViewController {
             $0.left.equalTo(classNumberTextField).inset(70)
             $0.right.equalToSuperview().inset(20)
         }
-
+        
         yearTextField.snp.makeConstraints {
             $0.top.equalTo(gradeTextField).inset(102)
             $0.left.equalToSuperview().inset(30)
@@ -657,4 +594,45 @@ class SginUpViewController: UIViewController {
         }
     }
     
+    @objc func pwHide1() {
+        if pwHideCount1 == 0 {
+            sginUpPWTextField.isSecureTextEntry = false;
+            pwHideCount1 += 1
+        } else {
+            sginUpPWTextField.isSecureTextEntry = true;
+            pwHideCount1 -= 1
+        }
+    }
+    /* : : : : : : : : :*/
+    
+    //비번 확인 부분 눈 깜박깜박하는 기능
+    @objc func pwHide2() {
+        if pwHideCount2 == 0 {
+            checkPWTextField.isSecureTextEntry = false;
+            pwHideCount2 += 1
+        } else {
+            checkPWTextField.isSecureTextEntry = true;
+            pwHideCount2 -= 1
+        }
+    }
+    /* : : : : : : : : :*/
+    
+    @objc func goSginInViewShift() {
+        // 여긴 그냥 로그인 창으로 이동
+        self.navigationController?.pushViewController(SginInViewController(), animated: true)
+    }
+    @objc func sginUpClickedBtn(_ sender: UIButton) {
+        self.sginUpButton.addTarget(self, action: #selector(self.sginupViewShift), for: .touchUpInside)
+    }
+    
+    @objc func goSignInClickedBtn(_ sender: UIButton) {
+        self.goSignInButton.addTarget(self, action: #selector(self.goSginInViewShift), for: .touchUpInside)
+    }
+    // 눈 깜박깜박 부분 버튼 기능
+    @objc func sginUpPWHideClickedBtn(_ sender: UIButton) {
+        self.sginUpPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide1), for: .touchUpInside)
+    }
+    @objc func sginUpCheckPWHideClickedBtn(_ sender: UIButton) {
+        self.sginUpCheckPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide2), for: .touchUpInside)
+    }
 }

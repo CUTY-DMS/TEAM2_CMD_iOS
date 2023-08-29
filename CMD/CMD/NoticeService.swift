@@ -10,7 +10,8 @@ class NoticeService {
         return Promise { seal in
             let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
             
-            AF.request(noticeListURL, headers: headers).responseJSON(queue: .main) { response in
+            AF.request(noticeListURL, headers: headers)
+                .responseJSON(queue: .main) { response in
                 switch response.result {
                 case .success:
                     if let data = response.data {

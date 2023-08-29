@@ -1,23 +1,8 @@
-//
-//  StudentInfoViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/11.
-//
-
 import UIKit
 import SnapKit
 import Then
 import Alamofire
 import SwiftyJSON
-
-//struct studentTitle: Codable {
-//    var id : Int
-//    var username : String
-//    var grader : Int
-//    var schoolClass : Int
-//    var number : Int
-//}
 
 class StudentInfoViewController:
     UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -95,7 +80,6 @@ class StudentInfoViewController:
         
         self.collectionView!.register(InfoCollectionViewCustomCell.self, forCellWithReuseIdentifier: InfoCollectionViewCustomCell.identifier)
     }
-    
     
     private func fetchStudentList() {
         func fetchStudentList() {

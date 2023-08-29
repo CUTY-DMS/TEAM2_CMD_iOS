@@ -1,10 +1,3 @@
-//
-//  NotificationCollectionViewCustomCell.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/17.
-//
-
 import SnapKit
 import Then
 

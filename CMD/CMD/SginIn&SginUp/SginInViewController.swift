@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/09.
-//
-
 import UIKit
 import SnapKit
 import Then
@@ -17,19 +10,6 @@ class SginInViewController: UIViewController{
     
     var pwHideCount = 0
     var userName: String = ""
-    
-    @objc func loginBtn(_ sender: UIButton) {
-        self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
-    }
-    @objc func goSginUpBtn(_ sender: UIButton) {
-        self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
-    }
-    @objc func loginPWHideBtn(_ sender: UIButton) {
-        self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
-    }
-    @objc func findPWBtn(_ sender: UIButton) {
-        self.findPWClickedBtn.addTarget(self, action: #selector(self.findPWSwift), for: .touchUpInside)
-    }
     
     private let loginLabel = UILabel().then {
         $0.text = "로그인"
@@ -211,7 +191,8 @@ class SginInViewController: UIViewController{
             "password": password
         ]
         
-        AF.request(loginURL, method: .post, parameters: parameters).responseJSON { response in
+        AF.request(loginURL, method: .post, parameters: parameters)
+            .responseJSON { response in
             switch response.result {
             case .success:
                 // 로그인 성공 시, 다음 화면으로 이동합니다.
@@ -366,5 +347,17 @@ class SginInViewController: UIViewController{
             $0.right.equalToSuperview().inset(31)
             $0.bottom.equalTo(loginUsernameTextField).inset(-4)
         }
+    }
+    @objc func loginBtn(_ sender: UIButton) {
+        self.loginClickedBtn.addTarget(self, action: #selector(self.MainVCSwift), for: .touchUpInside)
+    }
+    @objc func goSginUpBtn(_ sender: UIButton) {
+        self.goSignUpClickedBtn.addTarget(self, action: #selector(self.sginUpVCSwift), for: .touchUpInside)
+    }
+    @objc func loginPWHideBtn(_ sender: UIButton) {
+        self.loginPWHideClickedBtn.addTarget(self, action: #selector(self.pwHide), for: .touchUpInside)
+    }
+    @objc func findPWBtn(_ sender: UIButton) {
+        self.findPWClickedBtn.addTarget(self, action: #selector(self.findPWSwift), for: .touchUpInside)
     }
 }

@@ -1,11 +1,6 @@
-//
-//  StudentInfoModalViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/24.
-//
-
 import UIKit
+import Then
+import SnapKit
 
 class StudentInfoModalViewController: UIViewController {
     
@@ -163,5 +158,4 @@ class StudentInfoModalViewController: UIViewController {
             $0.left.equalToSuperview().inset(40)
         }
     }
-    
 }

@@ -1,10 +1,3 @@
-//
-//  NotificationModalViewController.swift
-//  CMD
-//
-//  Created by 이태규 on 2023/07/24.
-//
-
 import UIKit
 import SnapKit
 import Then
@@ -12,7 +5,6 @@ import Alamofire
 
 class NotificationModalViewController: UIViewController {
 
-//    var notificationId: Int?
     var notificationTitle: String?
     var notificationContent: String?
     
