@@ -118,47 +118,6 @@ class StudentInfoViewController:
             }
         }
         
-        
-        //    private func parseAndDisplayStudentList(jsonArray: [[String: Any]]) {
-        //            var studentList: [Student] = []
-        //            for json in jsonArray {
-        //                if let id = json["id"] as? Int,
-        //                   let username = json["username"] as? String,
-        //                   let grader = json["grader"] as? Int,
-        //                   let schoolClass = json["schoolClass"] as? Int,
-        //                   let number = json["number"] as? Int,
-        //                   let userId = json["userId"] as? String {
-        //                    let student = Student(id: id, username: username, grader: grader, schoolClass: schoolClass, number: number, userId: userId)
-        //                    studentList.append(student)
-        //                }
-        //            }
-        //        self.studentList = studentList
-        //        collectionView.reloadData()
-        //    }
-        
-        //API
-        //    func fetchAdminNotices() {
-        //            let baseURL = "http://52.65.160.119:8080"
-        //            let adminNoticesURL = "\(baseURL)/getStudentList" // 서버 API 엔드포인트 URL for admin notices
-        //
-        //            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
-        //                switch response.result {
-        //                case .success(let data):
-        //                    // 서버에서 받아온 JSON 데이터 파싱
-        //                    do {
-        //                        let decoder = JSONDecoder()
-        //                        self.studentTitles = try decoder.decode([studentTitle].self, from: data)
-        //                        self.collectionView.reloadData()
-        //                    } catch {
-        //                        print("Error parsing JSON: \(error)")
-        //                    }
-        //                case .failure(let error):
-        //                    print("Error fetching admin notices: \(error)")
-        //                }
-        //            }
-        //        }
-        
-        
         // 컬렉션 뷰 데이터 소스 메서드
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
             return studentList.count // 셀 개수

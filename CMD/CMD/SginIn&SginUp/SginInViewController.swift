@@ -202,36 +202,8 @@ class SginInViewController: UIViewController{
                 self.presentLoginScreen()
             }
         }
-        
-//        func fetchUserInfoFromServer() {
-//            let baseURL = "http://52.65.160.119:8080"
-//            let userInfoURL = URL(string: "\(baseURL)/student/\(userName)")!
-//
-//            AF.request(userInfoURL, method: .get).responseJSON { response in
-//                switch response.result {
-//                case .success:
-//                    if let data = response.data {
-//                        do {
-//                            // 서버에서 받아온 JSON 데이터 파싱하여 사용자 정보 모델로 변환
-//                            let decoder = JSONDecoder()
-//                            let userInfo = try decoder.decode(UserInfoModel.self, from: data)
-//
-//                            // MyPageViewController로 사용자 정보를 전달하고 표시
-//                            let myPageViewController = MyPageViewController()
-//                            myPageViewController.userInfo = userInfo
-//                            self.navigationController?.pushViewController(myPageViewController, animated: true)
-//                        } catch {
-//                            print("Error parsing JSON: \(error)")
-//                        }
-//                    }
-//                case .failure(let error):
-//                    print("Error fetching user info: \(error)")
-//                }
-//            }
-//        }
     }
 
-    
     func presentLoginScreen() { }
     
     func presentMainScreen() {

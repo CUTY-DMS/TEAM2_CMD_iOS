@@ -47,10 +47,6 @@ class NotificationCollectionViewCustomCell: UICollectionViewCell {
         }
     }
     
-//    func configure(with notification: NotificationModel) {
-//        notiFicationTitleLabel.text = notification.title
-//    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

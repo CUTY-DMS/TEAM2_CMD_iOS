@@ -75,41 +75,4 @@ class NotificationModalViewController: UIViewController {
             $0.right.equalToSuperview().inset(30)
         }
     }
-    
-//    private func fetchNotificationDetail() {
-//            guard let notificationId = notificationId else {
-//                return
-//            }
-//
-//            let notificationDetailURL = "http://52.65.160.119:8080/notificatoin/\(notificationId)"
-//
-//            AF.request(notificationDetailURL)
-//                .validate()
-//                .responseJSON { response in
-//                    switch response.result {
-//                    case .success(let data):
-//                        if let json = data as? [String: Any],
-//                           let title = json["title"] as? String,
-//                           let content = json["content"] as? String,
-//                           let expiredAt = json["expiredAt"] as? String{
-//                            self.titleLabel.text = title
-//                            self.contentLabel.text = content
-//                            self.notiFicationDateLabel.text = expiredAt
-//                        } else {
-//                            self.showAlert(title: "오류", message: "공지사항 정보를 가져올 수 없습니다.")
-//                        }
-//
-//                    case .failure(let error):
-//                        self.showAlert(title: "오류", message: "네트워크 또는 서버 오류가 발생했습니다.")
-//                        print("Fetching notification detail failed with error: \(error)")
-//                    }
-//                }
-//        }
-//
-//        private func showAlert(title: String, message: String) {
-//            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//            let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//            alertController.addAction(okAction)
-//            present(alertController, animated: true, completion: nil)
-//        }
 }

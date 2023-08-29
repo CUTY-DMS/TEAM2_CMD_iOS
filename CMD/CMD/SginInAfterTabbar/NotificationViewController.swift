@@ -80,31 +80,6 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         self.collectionView!.register(NotificationCollectionViewCustomCell.self, forCellWithReuseIdentifier: NotificationCollectionViewCustomCell.identifier)
     }
     
-    
-    
-    //API
-//    func fetchAdminNotices() {
-//            let baseURL = "http://52.65.160.119:8080"
-//            let adminNoticesURL = "\(baseURL)/notification/list" // 서버 API 엔드포인트 URL for admin notices
-//
-//            AF.request(adminNoticesURL, method: .get).responseData(queue: .main) { response in
-//                switch response.result {
-//                case .success(let data):
-//                    // 서버에서 받아온 JSON 데이터 파싱
-//                    do {
-//                        let decoder = JSONDecoder()
-//                        self.notices = try decoder.decode([notice].self, from: data)
-//                        // 서버에서 받아온 공지사항 데이터를 컬렉션 뷰에 반영
-//                        self.collectionView.reloadData()
-//                    } catch {
-//                        print("Error parsing JSON: \(error)")
-//                    }
-//                case .failure(let error):
-//                    print("Error fetching admin notices: \(error)")
-//                }
-//            }
-//        }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return notices.count
     }
@@ -127,13 +102,6 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let newViewController = NotificationModalViewController()
         newViewController.modalPresentationStyle = .overFullScreen // 아래에서 올라오는 스타일
-
-//        let selectedNotification = notificationList[indexPath.item]
-
-//        let notificationDetailVC = NotificationModalViewController()
-//        notificationDetailVC.notificationTitle = selectedNotification.title
-//        notificationDetailVC.notificationContent = selectedNotification.content
-        
         present(NotificationModalViewController(), animated: true, completion: nil)
         print("선택한 셀: \(indexPath.item)")
     }

@@ -30,10 +30,6 @@ class InfoCollectionViewCustomCell: UICollectionViewCell {
         setLayout()
     }
     
-//    func configure(with student: Student) {
-//        nameLabel.text = student.username
-//    }
-    
     func addSubView() {
         [
             imageView,
