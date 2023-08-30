@@ -27,7 +27,6 @@
 		4FA423BF2A650BBA00338465 /* EditInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA423BE2A650BBA00338465 /* EditInfoViewController.swift */; };
 		4FA4CB3A2A6E7B4100DF5AF8 /* StudentInfoModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4CB392A6E7B4100DF5AF8 /* StudentInfoModalViewController.swift */; };
 		4FA4CB3C2A6E83A700DF5AF8 /* NotificationModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4CB3B2A6E83A700DF5AF8 /* NotificationModalViewController.swift */; };
-		4FA4CB3E2A6E96D100DF5AF8 /* TemporaryPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA4CB3D2A6E96D100DF5AF8 /* TemporaryPasswordViewController.swift */; };
 		4FAEA91E2A812F3B0054C318 /* NoticeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FAEA91D2A812F3B0054C318 /* NoticeService.swift */; };
 		4FBDB8742A5D47610037E143 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBDB8732A5D47610037E143 /* MainHomeViewController.swift */; };
 		4FBDB8762A5D63740037E143 /* SubjectTableViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBDB8752A5D63740037E143 /* SubjectTableViewControllerCell.swift */; };
@@ -61,7 +60,6 @@
 		4FA423BE2A650BBA00338465 /* EditInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInfoViewController.swift; sourceTree = "<group>"; };
 		4FA4CB392A6E7B4100DF5AF8 /* StudentInfoModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInfoModalViewController.swift; sourceTree = "<group>"; };
 		4FA4CB3B2A6E83A700DF5AF8 /* NotificationModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModalViewController.swift; sourceTree = "<group>"; };
-		4FA4CB3D2A6E96D100DF5AF8 /* TemporaryPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryPasswordViewController.swift; sourceTree = "<group>"; };
 		4FAEA91D2A812F3B0054C318 /* NoticeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeService.swift; sourceTree = "<group>"; };
 		4FBDB8732A5D47610037E143 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
 		4FBDB8752A5D63740037E143 /* SubjectTableViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubjectTableViewControllerCell.swift; sourceTree = "<group>"; };
@@ -86,16 +84,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4F23246D2A80B41A00BC7556 /* popup */ = {
-			isa = PBXGroup;
-			children = (
-				4F23246B2A80AFB600BC7556 /* EmptyPopupViewController.swift */,
-				4F23246E2A80B49100BC7556 /* IdDuplicationPopupViewController.swift */,
-				4F2324702A80B77E00BC7556 /* differentPWPopupViewController.swift */,
-			);
-			path = popup;
-			sourceTree = "<group>";
-		};
 		4F98DE3F2A5AEB4C00F8B123 = {
 			isa = PBXGroup;
 			children = (
@@ -117,17 +105,8 @@
 		4F98DE4A2A5AEB4C00F8B123 /* CMD */ = {
 			isa = PBXGroup;
 			children = (
-				4F23246D2A80B41A00BC7556 /* popup */,
-				4FA423BD2A64553800338465 /* Model */,
-				4FBDB87E2A5D9E930037E143 /* SginInAfterTabbar */,
-				4FBDB8772A5D63870037E143 /* SginIn&SginUp */,
-				4F98DE4B2A5AEB4C00F8B123 /* AppDelegate.swift */,
-				4FAEA91D2A812F3B0054C318 /* NoticeService.swift */,
-				4F98DE4D2A5AEB4C00F8B123 /* SceneDelegate.swift */,
-				4F98DE572A5AEB4D00F8B123 /* Assets.xcassets */,
-				4F98DE592A5AEB4D00F8B123 /* LaunchScreen.storyboard */,
-				4F98DE5C2A5AEB4D00F8B123 /* Info.plist */,
-				4F98DE542A5AEB4C00F8B123 /* CMD.xcdatamodeld */,
+				4FC2A2552A9DF4E700D3ECE6 /* Resources */,
+				4FC2A2542A9DF4B500D3ECE6 /* Sources */,
 			);
 			path = CMD;
 			sourceTree = "<group>";
@@ -140,16 +119,6 @@
 				4F2324722A8123C300BC7556 /* UserInfoModel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		4FBDB8772A5D63870037E143 /* SginIn&SginUp */ = {
-			isa = PBXGroup;
-			children = (
-				4F98DE4F2A5AEB4C00F8B123 /* SginInViewController.swift */,
-				4F98DE642A5C5EEB00F8B123 /* SginUpViewController.swift */,
-				4FA4CB3D2A6E96D100DF5AF8 /* TemporaryPasswordViewController.swift */,
-			);
-			path = "SginIn&SginUp";
 			sourceTree = "<group>";
 		};
 		4FBDB87E2A5D9E930037E143 /* SginInAfterTabbar */ = {
@@ -170,6 +139,66 @@
 				4F2324462A7FC22100BC7556 /* UserService.swift */,
 			);
 			path = SginInAfterTabbar;
+			sourceTree = "<group>";
+		};
+		4FC2A2542A9DF4B500D3ECE6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4FC2A2582A9DF5DA00D3ECE6 /* Component */,
+				4FC2A2572A9DF5C300D3ECE6 /* Service */,
+				4FC2A2562A9DF59800D3ECE6 /* Scene */,
+				4F98DE5C2A5AEB4D00F8B123 /* Info.plist */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		4FC2A2552A9DF4E700D3ECE6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4F98DE572A5AEB4D00F8B123 /* Assets.xcassets */,
+				4F98DE4B2A5AEB4C00F8B123 /* AppDelegate.swift */,
+				4F98DE4D2A5AEB4C00F8B123 /* SceneDelegate.swift */,
+				4F98DE592A5AEB4D00F8B123 /* LaunchScreen.storyboard */,
+				4F98DE542A5AEB4C00F8B123 /* CMD.xcdatamodeld */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4FC2A2562A9DF59800D3ECE6 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				4FC2A2592A9DF66100D3ECE6 /* Auth */,
+				4FA423BD2A64553800338465 /* Model */,
+				4FBDB87E2A5D9E930037E143 /* SginInAfterTabbar */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
+		4FC2A2572A9DF5C300D3ECE6 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				4FAEA91D2A812F3B0054C318 /* NoticeService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		4FC2A2582A9DF5DA00D3ECE6 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				4F2324702A80B77E00BC7556 /* differentPWPopupViewController.swift */,
+				4F23246E2A80B49100BC7556 /* IdDuplicationPopupViewController.swift */,
+				4F23246B2A80AFB600BC7556 /* EmptyPopupViewController.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		4FC2A2592A9DF66100D3ECE6 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				4F98DE4F2A5AEB4C00F8B123 /* SginInViewController.swift */,
+				4F98DE642A5C5EEB00F8B123 /* SginUpViewController.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		79BF5742AEE5CB6BC97F072D /* Frameworks */ = {
@@ -323,7 +352,6 @@
 				4FBDB8742A5D47610037E143 /* MainHomeViewController.swift in Sources */,
 				4FA4CB3C2A6E83A700DF5AF8 /* NotificationModalViewController.swift in Sources */,
 				4FBDB87B2A5D9E310037E143 /* StudentInfoViewController.swift in Sources */,
-				4FA4CB3E2A6E96D100DF5AF8 /* TemporaryPasswordViewController.swift in Sources */,
 				4F2324432A7EB2C200BC7556 /* NotificationModel.swift in Sources */,
 				4F2324412A7E95B500BC7556 /* AutoLoginModel.swift in Sources */,
 				4F98DE4E2A5AEB4C00F8B123 /* SceneDelegate.swift in Sources */,

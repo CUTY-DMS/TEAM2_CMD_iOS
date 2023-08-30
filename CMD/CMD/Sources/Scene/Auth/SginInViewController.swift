@@ -4,9 +4,9 @@ import Then
 import Alamofire
 import SwiftyJSON
 
-var authToken: String?
-
 class SginInViewController: UIViewController{
+    
+    static var authToken: String?
     
     var pwHideCount = 0
     var userName: String = ""
