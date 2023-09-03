@@ -127,8 +127,8 @@
 		4FC2A29D2AA01E0200D3ECE6 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				4FC2A2A02AA01E5600D3ECE6 /* Service */,
 				4FC2A29F2AA01E4E00D3ECE6 /* Scene */,
+				4FC2A2A02AA01E5600D3ECE6 /* Service */,
 				4FC2A29E2AA01E4600D3ECE6 /* Component */,
 			);
 			path = Sources;
